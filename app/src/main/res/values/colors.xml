@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- estilo do app -->
+    <color name="colorPrimary">#2196F3</color>
+    <color name="colorPrimaryLight">#BBDEFB</color>
+    <color name="colorPrimaryDark">#1976D2</color>
+    <color name="colorAccent">#FF9800</color>
+
+    <color name="textAccent">#FFFFFF</color>
+    <color name="textPrimary">#212121</color>
+    <color name="textSecondary">#757575</color>
+
+    <color name="colorDivider">#BDBDBD</color>
+
+    <!-- cores poligonos -->
+    <color name="vermelho">#f44336</color>
+    <color name="rosa">#e91e63</color>
+    <color name="roxo">#673ab7</color>
+    <color name="indigo">#3f51b5</color>
+    <color name="azul">#03a9f4</color>
+    <color name="petroleo">#009688</color>
+    <color name="verde">#4caf50</color>
+    <color name="amarelo">#ffeb3b</color>
+    <color name="laranja">#ff5722</color>
+    <color name="marrom">#795548</color>
+    <color name="cinza">#607d8b</color>
+
+</resources>
