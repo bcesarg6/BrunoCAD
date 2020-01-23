@@ -11,7 +11,10 @@
     <color name="textPrimary">#212121</color>
     <color name="textSecondary">#757575</color>
 
+    <color name="branco">#FFFFFF</color>
+    <color name="brancoEscuro">#F0F0F0</color>
     <color name="colorDivider">#BDBDBD</color>
+    <color name="cinzaClaro">#808080</color>
 
     <!-- cores poligonos -->
     <color name="vermelho">#f44336</color>

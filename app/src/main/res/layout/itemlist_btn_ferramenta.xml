@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/card_btn"
+    android:layout_width="@dimen/btn_ferramenta_width"
+    android:layout_height="match_parent"
+    android:layout_marginEnd="10dp"
+    android:backgroundTint="@color/brancoEscuro"
+    android:elevation="0dp"
+    android:foreground="?attr/selectableItemBackground"
+    app:cardCornerRadius="10dp"
+    app:cardElevation="0dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/img_icone"
+            android:layout_width="@dimen/btn_ferramenta_icone_w"
+            android:layout_height="@dimen/btn_ferramenta_icone_h"
+            android:src="@drawable/ic_rotacao"
+            android:tint="@color/colorPrimary" />
+
+        <TextView
+            android:id="@+id/tv_nome"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="2dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginRight="2dp"
+            android:textSize="13sp"
+            android:text="Rotação"
+            android:textAlignment="center"
+            android:textColor="@color/colorPrimaryDark"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>
