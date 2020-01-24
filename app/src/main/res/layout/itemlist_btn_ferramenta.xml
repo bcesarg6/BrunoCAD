@@ -1,19 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/card_btn"
     android:layout_width="@dimen/btn_ferramenta_width"
     android:layout_height="match_parent"
-    android:layout_marginEnd="10dp"
-    android:backgroundTint="@color/brancoEscuro"
+    android:layout_marginStart="5dp"
+    android:layout_marginEnd="5dp"
     android:elevation="0dp"
     android:foreground="?attr/selectableItemBackground"
-    app:cardCornerRadius="10dp"
+    app:cardCornerRadius="20dp"
     app:cardElevation="0dp">
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/card_btn"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/brancoEscuro"
         android:gravity="center"
         android:orientation="vertical">
 
@@ -22,21 +23,29 @@
             android:layout_width="@dimen/btn_ferramenta_icone_w"
             android:layout_height="@dimen/btn_ferramenta_icone_h"
             android:src="@drawable/ic_rotacao"
-            android:tint="@color/colorPrimary" />
+            android:tint="@color/colorPrimary"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.2" />
 
         <TextView
             android:id="@+id/tv_nome"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="2dp"
+            android:layout_marginLeft="5dp"
             android:layout_marginTop="5dp"
-            android:layout_marginRight="2dp"
-            android:textSize="13sp"
-            android:text="Rotação"
+            android:layout_marginRight="5dp"
+            android:text="Mudança de escala"
             android:textAlignment="center"
             android:textColor="@color/colorPrimaryDark"
-            android:textStyle="bold" />
+            android:textSize="13sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/img_icone" />
 
-    </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.cardview.widget.CardView>
