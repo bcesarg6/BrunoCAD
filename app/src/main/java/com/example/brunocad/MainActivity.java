@@ -1,9 +1,13 @@
 package com.example.brunocad;
 
+import android.app.AlertDialog;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 
 import com.example.brunocad.adapters.AdapterMenu;
 import com.example.brunocad.adapters.BotaoFerramenta;
+import com.example.brunocad.dialogs.DialogAjuda;
 import com.example.brunocad.utils.CADConstants;
 import com.example.brunocad.utils.CADUtils;
 import com.example.brunocad.utils.Torradeira;
@@ -118,11 +122,17 @@ public class MainActivity extends AppCompatActivity implements AdapterMenu.MenuF
         }
 
         if (id == R.id.action_help) {
-            Torradeira.shortToast("ajuda", this);
+            abrirDialogAjuda();
             return true;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void abrirDialogAjuda() {
+        DialogAjuda dialogAjuda = new DialogAjuda(this);
+        final AlertDialog dialog = dialogAjuda.show();
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
     }
 
 }
