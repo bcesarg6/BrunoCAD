@@ -8,7 +8,7 @@ import java.util.List;
 public class Line extends Drawing {
 
     public Line(long id, float startX, float startY, float stopX, float stopY, int cor) {
-        super(id, CADConstants.tiposDesenhos.LINHA, cor);
+        super(id, CADConstants.drawingTypes.LINE, cor);
 
         List<Float> points = new ArrayList<>();
 

@@ -14,7 +14,7 @@ import com.example.brunocad.drawings.Drawing;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.example.brunocad.utils.CADConstants.tiposDesenhos;
+import static com.example.brunocad.utils.CADConstants.drawingTypes;
 
 public class CADCanvas extends View {
 
@@ -48,7 +48,7 @@ public class CADCanvas extends View {
 
         for (Drawing d: drawings) {
             switch (d.getTipo()) {
-                case tiposDesenhos.LINHA:
+                case drawingTypes.LINE:
 
                     float startX = d.getPoints().get(0);
                     float startY = d.getPoints().get(1);
@@ -58,7 +58,7 @@ public class CADCanvas extends View {
                     canvas.drawLine(startX, startY, stopX, stopY, d.getPaint());
                     break;
 
-                case tiposDesenhos.TRIANGULO:
+                case drawingTypes.TRIANGLE:
 
                     float p1x = d.getPoints().get(0);
                     float p1y = d.getPoints().get(1);
@@ -79,7 +79,7 @@ public class CADCanvas extends View {
                     canvas.drawPath(path, d.getPaint());
                     break;
 
-                case tiposDesenhos.RETANGULO:
+                case drawingTypes.RECTANGLE:
 
                     float left = d.getPoints().get(0);
                     float top = d.getPoints().get(1);
@@ -89,7 +89,7 @@ public class CADCanvas extends View {
                     canvas.drawRect(new RectF(left,top,right,bottom),d.getPaint());
                     break;
 
-                case tiposDesenhos.CIRCULO:
+                case drawingTypes.CIRCLE:
 
                     float cx = d.getPoints().get(0);
                     float cy = d.getPoints().get(1);

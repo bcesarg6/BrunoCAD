@@ -7,8 +7,8 @@ import java.util.List;
 
 public class Circle extends Drawing {
 
-    public Circle(long id, float centerX, float centerY, float radius, int cor) {
-        super(id, CADConstants.tiposDesenhos.CIRCULO, cor);
+    public Circle(long id, float centerX, float centerY, float radius, int cor, boolean isFill) {
+        super(id, CADConstants.drawingTypes.CIRCLE, cor);
 
         List<Float> points = new ArrayList<>();
 
@@ -17,6 +17,6 @@ public class Circle extends Drawing {
         points.add(radius);
 
         setPoints(points);
-        configPaint(true, true, true);
+        configPaint(true, isFill, true);
     }
 }

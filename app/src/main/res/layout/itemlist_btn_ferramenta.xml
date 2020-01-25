@@ -40,7 +40,7 @@
             android:text="Mudança de escala"
             android:textAlignment="center"
             android:textColor="@color/colorPrimaryDark"
-            android:textSize="13sp"
+            android:textSize="12sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

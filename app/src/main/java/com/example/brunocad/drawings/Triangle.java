@@ -11,9 +11,9 @@ public class Triangle extends Drawing {
                     float p1x, float p1y,
                     float p2x, float p2y,
                     float p3x, float p3y,
-                    int cor) {
+                    int cor, boolean isFill) {
 
-        super(id, CADConstants.tiposDesenhos.TRIANGULO, cor);
+        super(id, CADConstants.drawingTypes.TRIANGLE, cor);
 
         List<Float> points = new ArrayList<>();
 
@@ -25,6 +25,6 @@ public class Triangle extends Drawing {
         points.add(p3y);
 
         setPoints(points);
-        configPaint(true, true, true);
+        configPaint(true, isFill, true);
     }
 }

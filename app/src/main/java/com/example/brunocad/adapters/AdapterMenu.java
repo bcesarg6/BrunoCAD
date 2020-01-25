@@ -8,7 +8,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -25,7 +24,7 @@ public class AdapterMenu extends RecyclerView.Adapter<AdapterMenu.CustomViewHold
     private Context context;
     private MenuFerramentas listener;
     private List<BotaoFerramenta> botoes;
-    private int idBtnSelecionado = CADConstants.ferramentasID.NENHUMA;
+    private int idBtnSelecionado = CADConstants.toolsID.NONE;
 
     public AdapterMenu(Context context, MenuFerramentas listener, List<BotaoFerramenta> botoes) {
         this.context = context;

@@ -5,7 +5,7 @@ import android.widget.Toast;
 
 import com.example.brunocad.R;
 
-public class Torradeira {
+public class Toaster {
 
     private static Toast torrada;
 
