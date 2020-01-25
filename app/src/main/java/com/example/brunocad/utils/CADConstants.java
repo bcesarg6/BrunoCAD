@@ -19,4 +19,11 @@ public class CADConstants {
         public static final int CIRCULO = 9;
     }
 
+    public static class tiposDesenhos {
+        public static final int LINHA = 1;
+        public static final int TRIANGULO = 2;
+        public static final int RETANGULO = 3;
+        public static final int CIRCULO = 4;
+    }
+
 }

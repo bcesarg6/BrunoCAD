@@ -7,6 +7,7 @@ import android.os.Bundle;
 
 import com.example.brunocad.adapters.AdapterMenu;
 import com.example.brunocad.adapters.BotaoFerramenta;
+import com.example.brunocad.desenhos.Linha;
 import com.example.brunocad.dialogs.DialogAjuda;
 import com.example.brunocad.utils.CADConstants;
 import com.example.brunocad.utils.CADUtils;
@@ -32,6 +33,7 @@ import static com.example.brunocad.utils.CADConstants.ferramentasID;
 public class MainActivity extends AppCompatActivity implements AdapterMenu.MenuFerramentas {
 
     @BindView(R.id.toolbar) Toolbar toolbar;
+    @BindView(R.id.canvas) CADCanvas canvas;
     @BindView(R.id.tv_ferramenta_selecionada) TextView tvFerramentaSelecionada;
     @BindView(R.id.rv_criar) RecyclerView rvCriar;
     @BindView(R.id.rv_editar) RecyclerView rvEditar;
@@ -69,18 +71,30 @@ public class MainActivity extends AppCompatActivity implements AdapterMenu.MenuF
     @Override
     public void selecionarFerramenta(BotaoFerramenta botaoClicado) {
 
-        if (funcaoSelecionada == botaoClicado.getId()) {
-            //deseleciona a ferramenta
+        if (botaoClicado.getId() == ferramentasID.LIMPAR) {
+            canvas.clearCanvas();
+            Torradeira.shortToast("canvas limpo", this);
             funcaoSelecionada = ferramentasID.NENHUMA;
-            tvFerramentaSelecionada.setText("nenhuma ferramenta selecionada");
 
         } else {
-            //seleciona a ferramenta
-            funcaoSelecionada = botaoClicado.getId();
-            tvFerramentaSelecionada.setText(botaoClicado.getNome());
+
+            if (funcaoSelecionada == botaoClicado.getId()) {
+                //deseleciona a ferramenta
+                funcaoSelecionada = ferramentasID.NENHUMA;
+                tvFerramentaSelecionada.setText("nenhuma ferramenta selecionada");
+
+            } else {
+                //seleciona a ferramenta
+                funcaoSelecionada = botaoClicado.getId();
+                tvFerramentaSelecionada.setText(botaoClicado.getNome());
+            }
+
         }
 
-        // TODO: 1/24/20
+        if (funcaoSelecionada == ferramentasID.LINHA) {
+            Linha linha = new Linha(1, 100f, 100f, 300f, 300f, R.color.rosa);
+            canvas.addDesenho(linha);
+        }
 
         adapterMenuCriar.atualizaBtnSelecionado(funcaoSelecionada);
         adapterMenuEditar.atualizaBtnSelecionado(funcaoSelecionada);
