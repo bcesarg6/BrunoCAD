@@ -20,5 +20,6 @@ public class Linha extends Desenho {
         pontos.add(stopY);
 
         setPontos(pontos);
+        configPaint(true, true, true);
     }
 }

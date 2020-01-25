@@ -8,14 +8,32 @@ public class Desenho {
 
     private long id;
     private int tipo;
+    private int cor;
+
     private List<Float> pontos = null;
-    private Paint paint;
+    private Paint paint = null;
 
     public Desenho(long id, int tipo, int cor) {
         this.id = id;
         this.tipo = tipo;
-        this.paint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        this.paint.setColor(cor);
+        this.cor = cor;
+    }
+
+    public void configPaint(boolean isAntiAlias, boolean isFill, boolean isStroke) {
+        paint = new Paint();
+        paint.setColor(cor);
+
+        if (isAntiAlias) paint.setFlags(Paint.ANTI_ALIAS_FLAG);
+
+        if (isFill && isStroke) paint.setStyle(Paint.Style.FILL_AND_STROKE);
+        else if (isFill) paint.setStyle(Paint.Style.FILL);
+        else  paint.setStyle(Paint.Style.STROKE);
+    }
+
+    public void setStrokeWidth(float width) {
+        if (paint != null) {
+            paint.setStrokeWidth(width);
+        }
     }
 
     public long getId() {

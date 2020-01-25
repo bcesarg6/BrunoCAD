@@ -7,15 +7,19 @@ import android.os.Bundle;
 
 import com.example.brunocad.adapters.AdapterMenu;
 import com.example.brunocad.adapters.BotaoFerramenta;
+import com.example.brunocad.desenhos.Circulo;
+import com.example.brunocad.desenhos.Desenho;
 import com.example.brunocad.desenhos.Linha;
+import com.example.brunocad.desenhos.Retangulo;
+import com.example.brunocad.desenhos.Triangulo;
 import com.example.brunocad.dialogs.DialogAjuda;
-import com.example.brunocad.utils.CADConstants;
 import com.example.brunocad.utils.CADUtils;
 import com.example.brunocad.utils.Torradeira;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -23,6 +27,9 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -44,6 +51,8 @@ public class MainActivity extends AppCompatActivity implements AdapterMenu.MenuF
     private AdapterMenu adapterMenuEditar;
 
     private int funcaoSelecionada = ferramentasID.NENHUMA;
+
+    List<Desenho> desenhos = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,7 +81,8 @@ public class MainActivity extends AppCompatActivity implements AdapterMenu.MenuF
     public void selecionarFerramenta(BotaoFerramenta botaoClicado) {
 
         if (botaoClicado.getId() == ferramentasID.LIMPAR) {
-            canvas.clearCanvas();
+            //limpa o canvas e a lista de desenhos
+            limpar();
             Torradeira.shortToast("canvas limpo", this);
             funcaoSelecionada = ferramentasID.NENHUMA;
 
@@ -89,15 +99,56 @@ public class MainActivity extends AppCompatActivity implements AdapterMenu.MenuF
                 tvFerramentaSelecionada.setText(botaoClicado.getNome());
             }
 
-        }
+            int cor;
 
-        if (funcaoSelecionada == ferramentasID.LINHA) {
-            Linha linha = new Linha(1, 100f, 100f, 300f, 300f, R.color.rosa);
-            canvas.addDesenho(linha);
+            // TODO: 1/25/20
+            switch (funcaoSelecionada) {
+                case ferramentasID.LINHA:
+                    cor = ContextCompat.getColor(this, R.color.rosa);
+                    Linha linha = new Linha(1, 100f, 100f, 300f, 300f, cor);
+                    addDesenho(linha);
+                    break;
+
+                case ferramentasID.TRIANGULO:
+                    cor = ContextCompat.getColor(this, R.color.petroleo);
+                    Triangulo triangulo = new Triangulo(2, 300f,200f, 450f, 400f, 100f, 400f, cor);
+                    addDesenho(triangulo);
+                    break;
+
+                case ferramentasID.RETANGULO:
+                    cor = ContextCompat.getColor(this, R.color.azul);
+                    Retangulo retangulo = new Retangulo(3, 300f, 100f, 500f, 700f, cor);
+                    addDesenho(retangulo);
+                    break;
+
+                case ferramentasID.CIRCULO:
+                    cor = ContextCompat.getColor(this, R.color.vermelho);
+                    Circulo circulo = new Circulo(4,400f,400f,80f, cor);
+                    addDesenho(circulo);
+                    break;
+
+                default:
+                    break;
+            }
+
+            desenhar();
         }
 
         adapterMenuCriar.atualizaBtnSelecionado(funcaoSelecionada);
         adapterMenuEditar.atualizaBtnSelecionado(funcaoSelecionada);
+    }
+
+    private void addDesenho(Desenho desenho) {
+        desenhos.add(desenho);
+    }
+
+    private void limpar() {
+        desenhos.clear();
+        canvas.clearCanvas();
+    }
+
+    private void desenhar() {
+        canvas.desenhar(desenhos);
     }
 
     @OnClick(R.id.fab_acao)

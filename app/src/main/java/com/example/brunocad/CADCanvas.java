@@ -2,7 +2,10 @@ package com.example.brunocad;
 
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.Path;
+import android.graphics.Point;
 import android.graphics.Rect;
+import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.view.View;
 
@@ -32,8 +35,9 @@ public class CADCanvas extends View {
         super(context, attrs, defStyleAttr);
     }
 
-    public void addDesenho(Desenho desenho) {
-        desenhos.add(desenho);
+    public void desenhar(List<Desenho> desenhos) {
+        this.desenhos.clear();
+        this.desenhos.addAll(desenhos);
         postInvalidate();
     }
 
@@ -55,6 +59,46 @@ public class CADCanvas extends View {
                     float stopY = d.getPontos().get(3);
 
                     canvas.drawLine(startX, startY, stopX, stopY, d.getPaint());
+                    break;
+
+                case tiposDesenhos.TRIANGULO:
+
+                    float p1x = d.getPontos().get(0);
+                    float p1y = d.getPontos().get(1);
+
+                    float p2x = d.getPontos().get(2);
+                    float p2y = d.getPontos().get(3);
+
+                    float p3x = d.getPontos().get(4);
+                    float p3y = d.getPontos().get(5);
+
+                    Path path = new Path();
+                    path.setFillType(Path.FillType.EVEN_ODD);
+                    path.moveTo(p1x, p1y);
+                    path.lineTo(p2x, p2y);
+                    path.lineTo(p3x, p3y);
+                    path.close();
+
+                    canvas.drawPath(path, d.getPaint());
+                    break;
+
+                case tiposDesenhos.RETANGULO:
+
+                    float left = d.getPontos().get(0);
+                    float top = d.getPontos().get(1);
+                    float right = d.getPontos().get(2);
+                    float bottom = d.getPontos().get(3);
+
+                    canvas.drawRect(new RectF(left,top,right,bottom),d.getPaint());
+                    break;
+
+                case tiposDesenhos.CIRCULO:
+
+                    float cx = d.getPontos().get(0);
+                    float cy = d.getPontos().get(1);
+                    float radius = d.getPontos().get(2);
+
+                    canvas.drawCircle(cx, cy, radius, d.getPaint());
                     break;
 
                 default:
