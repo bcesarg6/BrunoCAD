@@ -7,11 +7,11 @@ import android.os.Bundle;
 
 import com.example.brunocad.adapters.AdapterMenu;
 import com.example.brunocad.adapters.BotaoFerramenta;
-import com.example.brunocad.desenhos.Circulo;
-import com.example.brunocad.desenhos.Desenho;
-import com.example.brunocad.desenhos.Linha;
-import com.example.brunocad.desenhos.Retangulo;
-import com.example.brunocad.desenhos.Triangulo;
+import com.example.brunocad.drawings.Circle;
+import com.example.brunocad.drawings.Drawing;
+import com.example.brunocad.drawings.Line;
+import com.example.brunocad.drawings.Rectangle;
+import com.example.brunocad.drawings.Triangle;
 import com.example.brunocad.dialogs.DialogAjuda;
 import com.example.brunocad.utils.CADUtils;
 import com.example.brunocad.utils.Torradeira;
@@ -52,7 +52,7 @@ public class MainActivity extends AppCompatActivity implements AdapterMenu.MenuF
 
     private int funcaoSelecionada = ferramentasID.NENHUMA;
 
-    List<Desenho> desenhos = new ArrayList<>();
+    List<Drawing> drawings = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,8 +81,8 @@ public class MainActivity extends AppCompatActivity implements AdapterMenu.MenuF
     public void selecionarFerramenta(BotaoFerramenta botaoClicado) {
 
         if (botaoClicado.getId() == ferramentasID.LIMPAR) {
-            //limpa o canvas e a lista de desenhos
-            limpar();
+            //limpa o canvas e a lista de drawings
+            clear();
             Torradeira.shortToast("canvas limpo", this);
             funcaoSelecionada = ferramentasID.NENHUMA;
 
@@ -105,50 +105,50 @@ public class MainActivity extends AppCompatActivity implements AdapterMenu.MenuF
             switch (funcaoSelecionada) {
                 case ferramentasID.LINHA:
                     cor = ContextCompat.getColor(this, R.color.rosa);
-                    Linha linha = new Linha(1, 100f, 100f, 300f, 300f, cor);
-                    addDesenho(linha);
+                    Line line = new Line(1, 100f, 100f, 300f, 300f, cor);
+                    addDrawing(line);
                     break;
 
                 case ferramentasID.TRIANGULO:
                     cor = ContextCompat.getColor(this, R.color.petroleo);
-                    Triangulo triangulo = new Triangulo(2, 300f,200f, 450f, 400f, 100f, 400f, cor);
-                    addDesenho(triangulo);
+                    Triangle triangle = new Triangle(2, 300f,200f, 450f, 400f, 100f, 400f, cor);
+                    addDrawing(triangle);
                     break;
 
                 case ferramentasID.RETANGULO:
                     cor = ContextCompat.getColor(this, R.color.azul);
-                    Retangulo retangulo = new Retangulo(3, 300f, 100f, 500f, 700f, cor);
-                    addDesenho(retangulo);
+                    Rectangle rectangle = new Rectangle(3, 300f, 100f, 500f, 700f, cor);
+                    addDrawing(rectangle);
                     break;
 
                 case ferramentasID.CIRCULO:
                     cor = ContextCompat.getColor(this, R.color.vermelho);
-                    Circulo circulo = new Circulo(4,400f,400f,80f, cor);
-                    addDesenho(circulo);
+                    Circle circle = new Circle(4,400f,400f,80f, cor);
+                    addDrawing(circle);
                     break;
 
                 default:
                     break;
             }
 
-            desenhar();
+            draw();
         }
 
         adapterMenuCriar.atualizaBtnSelecionado(funcaoSelecionada);
         adapterMenuEditar.atualizaBtnSelecionado(funcaoSelecionada);
     }
 
-    private void addDesenho(Desenho desenho) {
-        desenhos.add(desenho);
+    private void addDrawing(Drawing drawing) {
+        drawings.add(drawing);
     }
 
-    private void limpar() {
-        desenhos.clear();
+    private void clear() {
+        drawings.clear();
         canvas.clearCanvas();
     }
 
-    private void desenhar() {
-        canvas.desenhar(desenhos);
+    private void draw() {
+        canvas.draw(drawings);
     }
 
     @OnClick(R.id.fab_acao)

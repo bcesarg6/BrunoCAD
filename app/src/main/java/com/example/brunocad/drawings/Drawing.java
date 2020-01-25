@@ -1,19 +1,19 @@
-package com.example.brunocad.desenhos;
+package com.example.brunocad.drawings;
 
 import android.graphics.Paint;
 
 import java.util.List;
 
-public class Desenho {
+public class Drawing {
 
     private long id;
     private int tipo;
     private int cor;
 
-    private List<Float> pontos = null;
+    private List<Float> points = null;
     private Paint paint = null;
 
-    public Desenho(long id, int tipo, int cor) {
+    public Drawing(long id, int tipo, int cor) {
         this.id = id;
         this.tipo = tipo;
         this.cor = cor;
@@ -44,12 +44,12 @@ public class Desenho {
         this.id = id;
     }
 
-    public List<Float> getPontos() {
-        return pontos;
+    public List<Float> getPoints() {
+        return points;
     }
 
-    public void setPontos(List<Float> pontos) {
-        this.pontos = pontos;
+    public void setPoints(List<Float> points) {
+        this.points = points;
     }
 
     public Paint getPaint() {
