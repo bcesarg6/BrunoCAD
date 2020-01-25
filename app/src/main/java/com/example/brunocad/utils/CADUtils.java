@@ -11,6 +11,40 @@ import java.util.List;
 import static com.example.brunocad.utils.CADConstants.toolsID;
 
 public class CADUtils {
+    private static long nextDrawingId = -1;
+    private static int nextColorIdx = 0;
+
+    private static int[] colors = { R.color.roxo,
+                                    R.color.indigo,
+                                    R.color.petroleo,
+                                    R.color.azul,
+                                    R.color.verde,
+                                    R.color.amarelo,
+                                    R.color.laranja,
+                                    R.color.vermelho,
+                                    R.color.rosa };
+
+    public static void resetNextDrawingId() {
+        nextDrawingId = -1;
+    }
+
+    public static long getNextDrawingId() {
+        return ++nextDrawingId;
+    }
+
+
+    public static void resetNextColorIdx() {
+        nextColorIdx = 0;
+    }
+
+    public static int getNextColor() {
+        int color = colors[nextColorIdx];
+
+        nextColorIdx++;
+        if (nextColorIdx >= colors.length) nextColorIdx = 0;
+
+        return color;
+    }
 
     public static List<BotaoFerramenta> getBotoesMenuCriar(Context context) {
         List<BotaoFerramenta> ferramentasCriar = new ArrayList<>();

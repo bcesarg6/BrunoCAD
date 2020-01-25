@@ -5,6 +5,7 @@ import android.graphics.Canvas;
 import android.graphics.Path;
 import android.graphics.RectF;
 import android.util.AttributeSet;
+import android.view.MotionEvent;
 import android.view.View;
 
 import androidx.annotation.Nullable;
@@ -18,6 +19,7 @@ import static com.example.brunocad.utils.CADConstants.drawingTypes;
 
 public class CADCanvas extends View {
 
+    private tapListener listener = null;
     List<Drawing> drawings = new ArrayList<>();
 
     public CADCanvas(Context context) {
@@ -102,6 +104,57 @@ public class CADCanvas extends View {
                     break;
             }
         }
-
     }
+
+    public void setListener(tapListener listener) {
+        this.listener = listener;
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+
+        if (event.getActionMasked() == MotionEvent.ACTION_DOWN ||
+            event.getActionMasked() == MotionEvent.ACTION_POINTER_DOWN) return true;
+
+        if (listener != null) {
+            int pointerIndex = event.getActionIndex();
+
+            if (event.getActionMasked() == MotionEvent.ACTION_UP ||
+                    event.getActionMasked() == MotionEvent.ACTION_POINTER_UP) {
+
+                int x = (int) event.getX(pointerIndex);
+                int y = (int) event.getY(pointerIndex);
+
+                listener.onTapCanvas(x,y);
+            }
+        }
+
+        return super.onTouchEvent(event);
+    }
+
+    public interface tapListener {
+        void onTapCanvas(int x, int y);
+    }
+
+//    override fun onTouchEvent(event: MotionEvent): Boolean {
+//        val pointerIndex = event.actionIndex
+//
+//        if (verts.size >= 64) {
+//            Toast.makeText(context, "Hit maximum 64 coordinates", Toast.LENGTH_SHORT).show()
+//            return false
+//        }
+//
+//        when (event.actionMasked) {
+//            MotionEvent.ACTION_DOWN,
+//                    MotionEvent.ACTION_POINTER_DOWN -> return true
+//            MotionEvent.ACTION_UP,
+//                    MotionEvent.ACTION_POINTER_UP -> {
+//                verts.add(event.getX(pointerIndex))
+//                verts.add(event.getY(pointerIndex))
+//                invalidate()
+//                return true
+//            }
+//        }
+//        return super.onTouchEvent(event)
+//    }
 }

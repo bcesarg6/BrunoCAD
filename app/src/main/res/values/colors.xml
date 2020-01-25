@@ -17,15 +17,15 @@
     <color name="cinzaClaro">#808080</color>
 
     <!-- cores poligonos -->
-    <color name="vermelho">#f44336</color>
-    <color name="rosa">#e91e63</color>
     <color name="roxo">#673ab7</color>
     <color name="indigo">#3f51b5</color>
-    <color name="azul">#03a9f4</color>
     <color name="petroleo">#009688</color>
+    <color name="azul">#03a9f4</color>
     <color name="verde">#4caf50</color>
     <color name="amarelo">#ffeb3b</color>
     <color name="laranja">#ff5722</color>
+    <color name="vermelho">#f44336</color>
+    <color name="rosa">#e91e63</color>
     <color name="marrom">#795548</color>
     <color name="cinza">#607d8b</color>
 

@@ -4,4 +4,11 @@
     <string name="action_help">Ajuda</string>
 
     <string name="erro_generico">ops, algo de errado não está certo</string>
+    <string name="op_cancelada">operação cancelada</string>
+    <string name="instrucoes_linha">criar linha</string>
+
+    <string name="toque_1_ponto">toque em 1 ponto no canvas</string>
+    <string name="toque_2_pontos">toque em 2 pontos no canvas</string>
+    <string name="toque_4_pontos">toque em 4 pontos no canvas</string>
+    <string name="linha_criada">linha criada</string>
 </resources>
