@@ -115,27 +115,27 @@ public class MainActivity extends AppCompatActivity implements AdapterMenu.MenuF
                         break;
 
                     case toolsID.TRIANGLE_STROKE:
-                        cor = ContextCompat.getColor(this, CADUtils.getNextColor());
-                        Triangle triangle = new Triangle(2, 500f,200f, 750f, 400f, 100f, 400f, cor, false);
-                        addDrawing(triangle);
+                        tvToolInfo.setText(R.string.instrucoes_triangulo);
+                        tvContextInfo.setText(R.string.toque_3_pontos);
+                        tvContextInfo.setVisibility(View.VISIBLE);
                         break;
 
                     case toolsID.TRIANGLE:
-                        cor = ContextCompat.getColor(this, CADUtils.getNextColor());
-                        Triangle triangleFilled = new Triangle(3, 300f,200f, 450f, 400f, 100f, 400f, cor, true);
-                        addDrawing(triangleFilled);
+                        tvToolInfo.setText(R.string.instrucoes_triangulo_p);
+                        tvContextInfo.setText(R.string.toque_3_pontos);
+                        tvContextInfo.setVisibility(View.VISIBLE);
                         break;
 
                     case toolsID.RECTANGLE_STROKE:
-                        cor = ContextCompat.getColor(this, CADUtils.getNextColor());
-                        Rectangle rectangle = new Rectangle(4, 300f, 400f, 500f, 800f, cor, false);
-                        addDrawing(rectangle);
+                        tvToolInfo.setText(R.string.instrucoes_retangulo);
+                        tvContextInfo.setText(R.string.toque_2_pontos);
+                        tvContextInfo.setVisibility(View.VISIBLE);
                         break;
 
                     case toolsID.RECTANGLE:
-                        cor = ContextCompat.getColor(this, CADUtils.getNextColor());
-                        Rectangle rectangleFilled = new Rectangle(5, 300f, 100f, 500f, 700f, cor, true);
-                        addDrawing(rectangleFilled);
+                        tvToolInfo.setText(R.string.instrucoes_retangulo_p);
+                        tvContextInfo.setText(R.string.toque_2_pontos);
+                        tvContextInfo.setVisibility(View.VISIBLE);
                         break;
 
                     case toolsID.CIRCLE_STROKE:
@@ -167,6 +167,34 @@ public class MainActivity extends AppCompatActivity implements AdapterMenu.MenuF
         addDrawing(line);
     }
 
+    private void createTriangleStroke(Point p1, Point p2, Point p3) {
+        int cor;
+        cor = ContextCompat.getColor(this, CADUtils.getNextColor());
+        Triangle triangle = new Triangle(CADUtils.getNextDrawingId(), p1.x,p1.y, p2.x, p2.y, p3.x, p3.y, cor, false);
+        addDrawing(triangle);
+    }
+
+    private void createTriangle(Point p1, Point p2, Point p3) {
+        int cor;
+        cor = ContextCompat.getColor(this, CADUtils.getNextColor());
+        Triangle triangle = new Triangle(CADUtils.getNextDrawingId(), p1.x,p1.y, p2.x, p2.y, p3.x, p3.y, cor, true);
+        addDrawing(triangle);
+    }
+
+    private void createRectangleStroke(Point start, Point stop) {
+        int cor;
+        cor = ContextCompat.getColor(this, CADUtils.getNextColor());
+        Rectangle rectangle = new Rectangle(CADUtils.getNextDrawingId(), start.x, start.y, stop.x, stop.y, cor, false);
+        addDrawing(rectangle);
+    }
+
+    private void createRectangle(Point start, Point stop) {
+        int cor;
+        cor = ContextCompat.getColor(this, CADUtils.getNextColor());
+        Rectangle rectangle = new Rectangle(CADUtils.getNextDrawingId(), start.x, start.y, stop.x, stop.y, cor, true);
+        addDrawing(rectangle);
+    }
+
     @SuppressLint("DefaultLocale")
     @Override
     public void onTapCanvas(int x, int y) {
@@ -176,6 +204,7 @@ public class MainActivity extends AppCompatActivity implements AdapterMenu.MenuF
         coordinates.add(new Point(x,y));
 
         switch (funcaoSelecionada) {
+
             case toolsID.LINE:
 
                 if (coordinates.size() >= 2) {
@@ -197,15 +226,115 @@ public class MainActivity extends AppCompatActivity implements AdapterMenu.MenuF
                 break;
 
             case toolsID.TRIANGLE_STROKE:
+
+                if (coordinates.size() >= 3) {
+                    createTriangleStroke(coordinates.get(0), coordinates.get(1), coordinates.get(2));
+                    draw();
+
+                    Toaster.shortToast(getString(R.string.triangulo_criada), this);
+
+                    tvContextInfo.setText(R.string.toque_3_pontos);
+                    tvContextInfo.setVisibility(View.VISIBLE);
+
+                    coordinates.clear();
+
+                } else {
+                    tvContextInfo.setText(coordinates.size() < 2 ? R.string.toque_2_pontos : R.string.toque_1_ponto);
+                    tvContextInfo.setVisibility(View.VISIBLE);
+                }
+
                 break;
 
             case toolsID.TRIANGLE:
+
+                if (coordinates.size() >= 3) {
+                    createTriangle(coordinates.get(0), coordinates.get(1), coordinates.get(2));
+                    draw();
+
+                    Toaster.shortToast(getString(R.string.triangulo_criada), this);
+
+                    tvContextInfo.setText(R.string.toque_3_pontos);
+                    tvContextInfo.setVisibility(View.VISIBLE);
+
+                    coordinates.clear();
+
+                } else {
+                    tvContextInfo.setText(coordinates.size() < 2 ? R.string.toque_2_pontos : R.string.toque_1_ponto);
+                    tvContextInfo.setVisibility(View.VISIBLE);
+                }
+
                 break;
 
             case toolsID.RECTANGLE_STROKE:
+
+                if (coordinates.size() >= 2) {
+
+                    Point start = coordinates.get(0);
+                    Point stop = coordinates.get(1);
+
+                    if (start.x > stop.x) {
+                        int aux = start.x;
+                        start.x = stop.x;
+                        stop.x = aux;
+                    }
+
+                    if (start.y > stop.y) {
+                        int aux = start.y;
+                        start.y = stop.y;
+                        stop.y = aux;
+                    }
+
+                    createRectangleStroke(start, stop);
+                    draw();
+
+                    Toaster.shortToast(getString(R.string.retangulo_criada), this);
+
+                    tvContextInfo.setText(R.string.toque_2_pontos);
+                    tvContextInfo.setVisibility(View.VISIBLE);
+
+                    coordinates.clear();
+
+                } else {
+                    tvContextInfo.setText(R.string.toque_1_ponto);
+                    tvContextInfo.setVisibility(View.VISIBLE);
+                }
+
                 break;
 
             case toolsID.RECTANGLE:
+
+                if (coordinates.size() >= 2) {
+
+                    Point start = coordinates.get(0);
+                    Point stop = coordinates.get(1);
+
+                    if (start.x > stop.x) {
+                        int aux = start.x;
+                        start.x = stop.x;
+                        stop.x = aux;
+                    }
+
+                    if (start.y > stop.y) {
+                        int aux = start.y;
+                        start.y = stop.y;
+                        stop.y = aux;
+                    }
+
+                    createRectangle(start, stop);
+                    draw();
+
+                    Toaster.shortToast(getString(R.string.retangulo_criada), this);
+
+                    tvContextInfo.setText(R.string.toque_2_pontos);
+                    tvContextInfo.setVisibility(View.VISIBLE);
+
+                    coordinates.clear();
+
+                } else {
+                    tvContextInfo.setText(R.string.toque_1_ponto);
+                    tvContextInfo.setVisibility(View.VISIBLE);
+                }
+
                 break;
 
             case toolsID.CIRCLE_STROKE:

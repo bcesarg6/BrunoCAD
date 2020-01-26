@@ -57,8 +57,8 @@ public class CADUtils {
         ferramentasCriar.add(new BotaoFerramenta(toolsID.RECTANGLE_STROKE, "Retângulos", context.getDrawable(R.drawable.ic_retangulo)));
         ferramentasCriar.add(new BotaoFerramenta(toolsID.RECTANGLE, "Retângulos Preenchidos", context.getDrawable(R.drawable.ic_retangulo_fill)));
 
-        ferramentasCriar.add(new BotaoFerramenta(toolsID.CIRCLE_STROKE, "Circulos", context.getDrawable(R.drawable.ic_circulo)));
-        ferramentasCriar.add(new BotaoFerramenta(toolsID.CIRCLE, "Circulos Preenchidos", context.getDrawable(R.drawable.ic_circulo_fill)));
+        ferramentasCriar.add(new BotaoFerramenta(toolsID.CIRCLE_STROKE, "Círculos", context.getDrawable(R.drawable.ic_circulo)));
+        ferramentasCriar.add(new BotaoFerramenta(toolsID.CIRCLE, "Círculos Preenchidos", context.getDrawable(R.drawable.ic_circulo_fill)));
 
         return ferramentasCriar;
     }

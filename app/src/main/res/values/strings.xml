@@ -5,10 +5,21 @@
 
     <string name="erro_generico">ops, algo de errado não está certo</string>
     <string name="op_cancelada">operação cancelada</string>
+
     <string name="instrucoes_linha">criar linha</string>
+    <string name="instrucoes_triangulo">criar triângulo</string>
+    <string name="instrucoes_triangulo_p">criar triângulo preenchido</string>
+    <string name="instrucoes_retangulo">criar retângulo</string>
+    <string name="instrucoes_retangulo_p">criar retângulo preenchido</string>
+    <string name="instrucoes_circulo">criar círculo</string>
+    <string name="instrucoes_circulo_p">criar círculo preenchido</string>
 
     <string name="toque_1_ponto">toque em 1 ponto no canvas</string>
     <string name="toque_2_pontos">toque em 2 pontos no canvas</string>
-    <string name="toque_4_pontos">toque em 4 pontos no canvas</string>
-    <string name="linha_criada">linha criada</string>
+    <string name="toque_3_pontos">toque em 3 pontos no canvas</string>
+
+    <string name="linha_criada">linha desenhada</string>
+    <string name="triangulo_criada">triângulo desenhado</string>
+    <string name="retangulo_criada">retângulo desenhado</string>
+    <string name="ciruclo_criada">círculo desenhado</string>
 </resources>
