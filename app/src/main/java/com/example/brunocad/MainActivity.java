@@ -2,17 +2,16 @@ package com.example.brunocad;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -25,9 +24,9 @@ import com.example.brunocad.drawings.Drawing;
 import com.example.brunocad.drawings.Line;
 import com.example.brunocad.drawings.Rectangle;
 import com.example.brunocad.drawings.Triangle;
+import com.example.brunocad.utils.CADConstants.TabsID;
 import com.example.brunocad.utils.CADUtils;
 import com.example.brunocad.utils.Toaster;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,16 +39,21 @@ import static com.example.brunocad.utils.CADConstants.toolsID;
 
 public class MainActivity extends AppCompatActivity implements AdapterMenu.MenuFerramentas, CADCanvas.tapListener {
 
-    @BindView(R.id.toolbar) Toolbar toolbar;
-    @BindView(R.id.canvas) CADCanvas canvas;
     @BindView(R.id.tv_tap_info) TextView tvTapInfo;
     @BindView(R.id.tv_context_info) TextView tvContextInfo;
     @BindView(R.id.tv_tool_info) TextView tvToolInfo;
-    @BindView(R.id.rv_criar) RecyclerView rvCriar;
-    @BindView(R.id.rv_editar) RecyclerView rvEditar;
-    @BindView(R.id.fab_acao) FloatingActionButton fab;
 
-    private boolean isMenuCriar = true;
+    @BindView(R.id.canvas) CADCanvas canvas;
+
+    @BindView(R.id.btn_aba_criar) Button btnAbaCriar;
+    @BindView(R.id.btn_aba_ferramentas) Button btnAbaFerramentas;
+    @BindView(R.id.btn_aba_editar) Button btnAbaEditar;
+
+    @BindView(R.id.rv_criar) RecyclerView rvCriar;
+    @BindView(R.id.rv_ferramentas) RecyclerView rvFerramentas;
+
+    private int abaSelecionada = TabsID.CREATE;
+
     private AdapterMenu adapterMenuCriar;
     private AdapterMenu adapterMenuEditar;
 
@@ -65,8 +69,6 @@ public class MainActivity extends AppCompatActivity implements AdapterMenu.MenuF
 
         ButterKnife.bind(this);
 
-        setSupportActionBar(toolbar);
-
         config();
     }
 
@@ -79,20 +81,21 @@ public class MainActivity extends AppCompatActivity implements AdapterMenu.MenuF
         rvCriar.setLayoutManager(new LinearLayoutManager(this, RecyclerView.HORIZONTAL, false));
         rvCriar.setAdapter(adapterMenuCriar);
 
-        rvEditar.setLayoutManager(new LinearLayoutManager(this, RecyclerView.HORIZONTAL, false));
-        rvEditar.setAdapter(adapterMenuEditar);
+        rvFerramentas.setLayoutManager(new LinearLayoutManager(this, RecyclerView.HORIZONTAL, false));
+        rvFerramentas.setAdapter(adapterMenuEditar);
     }
 
     @Override
     public void selecionarFerramenta(BotaoFerramenta botaoClicado) {
 
         if (botaoClicado.getId() == toolsID.CLEAR) onClearClicked();
+        else if (botaoClicado.getId() == toolsID.HELP) abrirDialogAjuda();
         else {
 
             if (funcaoSelecionada == botaoClicado.getId()) cancelOperation();
             else {
 
-                if (funcaoSelecionada != toolsID.NONE) {
+                if (funcaoSelecionada != toolsID.NONE && !coordinates.isEmpty()) {
                     Toaster.shortToast("operação anterior cancelada", this);
 
                     tvTapInfo.setVisibility(View.INVISIBLE);
@@ -339,47 +342,72 @@ public class MainActivity extends AppCompatActivity implements AdapterMenu.MenuF
         canvas.draw(drawings);
     }
 
-    @OnClick(R.id.fab_acao)
-    void toggleMenu() {
+    @OnClick(R.id.btn_aba_criar)
+    void onClickAbaCriar() {
+        if (abaSelecionada != TabsID.CREATE) {
+            abaSelecionada = TabsID.CREATE;
 
-        if (isMenuCriar) {
-            //exibe menu editar
-            rvCriar.setVisibility(View.INVISIBLE);
-            rvEditar.setVisibility(View.VISIBLE);
-            fab.setImageDrawable(getResources().getDrawable(R.drawable.ic_editar));
+            btnAbaCriar.setBackground(getDrawable(R.color.branco));
+            btnAbaCriar.setTextColor(getColor(R.color.colorAccent));
+            btnAbaCriar.setCompoundDrawableTintList(ColorStateList.valueOf(getColor(R.color.colorAccent)));
 
-        } else {
-            //exibe menu criar
-            rvEditar.setVisibility(View.INVISIBLE);
+            btnAbaFerramentas.setBackground(getDrawable(R.color.brancoEscuro));
+            btnAbaFerramentas.setTextColor(getColor(R.color.cinzaClaro));
+            btnAbaFerramentas.setCompoundDrawableTintList(ColorStateList.valueOf(getColor(R.color.cinzaClaro)));
+
+            btnAbaEditar.setBackground(getDrawable(R.color.brancoEscuro));
+            btnAbaEditar.setTextColor(getColor(R.color.cinzaClaro));
+            btnAbaEditar.setCompoundDrawableTintList(ColorStateList.valueOf(getColor(R.color.cinzaClaro)));
+
+            rvFerramentas.setVisibility(View.INVISIBLE);
             rvCriar.setVisibility(View.VISIBLE);
-            fab.setImageDrawable(getResources().getDrawable(R.drawable.ic_criar));
         }
-
-        isMenuCriar = !isMenuCriar;
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
+    @OnClick(R.id.btn_aba_ferramentas)
+    void onClickAbaFerramentas() {
+        if (abaSelecionada != TabsID.TOOLS) {
+            abaSelecionada = TabsID.TOOLS;
+
+            btnAbaFerramentas.setBackground(getDrawable(R.color.branco));
+            btnAbaFerramentas.setTextColor(getColor(R.color.colorAccent));
+            btnAbaFerramentas.setCompoundDrawableTintList(ColorStateList.valueOf(getColor(R.color.colorAccent)));
+
+            btnAbaCriar.setBackground(getDrawable(R.color.brancoEscuro));
+            btnAbaCriar.setTextColor(getColor(R.color.cinzaClaro));
+            btnAbaCriar.setCompoundDrawableTintList(ColorStateList.valueOf(getColor(R.color.cinzaClaro)));
+
+            btnAbaEditar.setBackground(getDrawable(R.color.brancoEscuro));
+            btnAbaEditar.setTextColor(getColor(R.color.cinzaClaro));
+            btnAbaEditar.setCompoundDrawableTintList(ColorStateList.valueOf(getColor(R.color.cinzaClaro)));
+
+
+            rvCriar.setVisibility(View.INVISIBLE);
+            rvFerramentas.setVisibility(View.VISIBLE);
+        }
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
+    @OnClick(R.id.btn_aba_editar)
+    void onClickAbaEditar() {
+        if (abaSelecionada != TabsID.EDIT) {
+            abaSelecionada = TabsID.EDIT;
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            Toaster.shortToast("configs", this);
-            return true;
+            btnAbaEditar.setBackground(getDrawable(R.color.branco));
+            btnAbaEditar.setTextColor(getColor(R.color.colorAccent));
+            btnAbaEditar.setCompoundDrawableTintList(ColorStateList.valueOf(getColor(R.color.colorAccent)));
+
+            btnAbaCriar.setBackground(getDrawable(R.color.brancoEscuro));
+            btnAbaCriar.setTextColor(getColor(R.color.cinzaClaro));
+            btnAbaCriar.setCompoundDrawableTintList(ColorStateList.valueOf(getColor(R.color.cinzaClaro)));
+
+            btnAbaFerramentas.setBackground(getDrawable(R.color.brancoEscuro));
+            btnAbaFerramentas.setTextColor(getColor(R.color.cinzaClaro));
+            btnAbaFerramentas.setCompoundDrawableTintList(ColorStateList.valueOf(getColor(R.color.cinzaClaro)));
+
+            rvCriar.setVisibility(View.INVISIBLE);
+            rvFerramentas.setVisibility(View.INVISIBLE);
+            // TODO: 1/26/20
         }
-
-        if (id == R.id.action_help) {
-            abrirDialogAjuda();
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
     }
 
     private void abrirDialogAjuda() {

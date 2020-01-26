@@ -2,7 +2,14 @@ package com.example.brunocad.utils;
 
 public class CADConstants {
 
+    public static class TabsID {
+        public static final int CREATE = 1;
+        public static final int TOOLS = 2;
+        public static final int EDIT = 3;
+    }
+
     public static class toolsID {
+        public static final int HELP = -1;
         public static final int NONE = 0;
 
         //Editar

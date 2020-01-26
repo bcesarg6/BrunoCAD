@@ -66,6 +66,7 @@ public class CADUtils {
     public static List<BotaoFerramenta> getBotoesMenuEditar(Context context) {
         List<BotaoFerramenta> ferramentasEditar = new ArrayList<>();
 
+        ferramentasEditar.add(new BotaoFerramenta(toolsID.HELP, "Ajuda", context.getDrawable(R.drawable.ic_ajuda)));
         ferramentasEditar.add(new BotaoFerramenta(toolsID.CLEAR, "Limpar", context.getDrawable(R.drawable.ic_clear)));
         ferramentasEditar.add(new BotaoFerramenta(toolsID.TRANSLATION, "Translação", context.getDrawable(R.drawable.ic_translacao)));
         ferramentasEditar.add(new BotaoFerramenta(toolsID.ROTATION, "Rotação", context.getDrawable(R.drawable.ic_rotacao)));
