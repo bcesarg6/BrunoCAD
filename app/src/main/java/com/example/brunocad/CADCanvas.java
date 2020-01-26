@@ -47,63 +47,76 @@ public class CADCanvas extends View {
 
     @Override
     protected void onDraw(Canvas canvas) {
-
         for (Drawing d: drawings) {
+
             switch (d.getTipo()) {
+
                 case drawingTypes.LINE:
-
-                    float startX = d.getPoints().get(0);
-                    float startY = d.getPoints().get(1);
-                    float stopX = d.getPoints().get(2);
-                    float stopY = d.getPoints().get(3);
-
-                    canvas.drawLine(startX, startY, stopX, stopY, d.getPaint());
+                    drawLine(canvas, d);
                     break;
 
                 case drawingTypes.TRIANGLE:
-
-                    float p1x = d.getPoints().get(0);
-                    float p1y = d.getPoints().get(1);
-
-                    float p2x = d.getPoints().get(2);
-                    float p2y = d.getPoints().get(3);
-
-                    float p3x = d.getPoints().get(4);
-                    float p3y = d.getPoints().get(5);
-
-                    Path path = new Path();
-                    path.setFillType(Path.FillType.EVEN_ODD);
-                    path.moveTo(p1x, p1y);
-                    path.lineTo(p2x, p2y);
-                    path.lineTo(p3x, p3y);
-                    path.close();
-
-                    canvas.drawPath(path, d.getPaint());
+                    drawTriangle(canvas, d);
                     break;
 
                 case drawingTypes.RECTANGLE:
-
-                    float left = d.getPoints().get(0);
-                    float top = d.getPoints().get(1);
-                    float right = d.getPoints().get(2);
-                    float bottom = d.getPoints().get(3);
-
-                    canvas.drawRect(new RectF(left,top,right,bottom),d.getPaint());
+                    drawRectangle(canvas, d);
                     break;
 
                 case drawingTypes.CIRCLE:
-
-                    float cx = d.getPoints().get(0);
-                    float cy = d.getPoints().get(1);
-                    float radius = d.getPoints().get(2);
-
-                    canvas.drawCircle(cx, cy, radius, d.getPaint());
+                    drawCircle(canvas, d);
                     break;
 
                 default:
                     break;
             }
         }
+    }
+
+    private void drawCircle(Canvas canvas, Drawing d) {
+        float cx = d.getPoints().get(0);
+        float cy = d.getPoints().get(1);
+        float radius = d.getPoints().get(2);
+
+        canvas.drawCircle(cx, cy, radius, d.getPaint());
+    }
+
+    private void drawRectangle(Canvas canvas, Drawing d) {
+        float left = d.getPoints().get(0);
+        float top = d.getPoints().get(1);
+        float right = d.getPoints().get(2);
+        float bottom = d.getPoints().get(3);
+
+        canvas.drawRect(new RectF(left,top,right,bottom),d.getPaint());
+    }
+
+    private void drawTriangle(Canvas canvas, Drawing d) {
+        float p1x = d.getPoints().get(0);
+        float p1y = d.getPoints().get(1);
+
+        float p2x = d.getPoints().get(2);
+        float p2y = d.getPoints().get(3);
+
+        float p3x = d.getPoints().get(4);
+        float p3y = d.getPoints().get(5);
+
+        Path path = new Path();
+        path.setFillType(Path.FillType.EVEN_ODD);
+        path.moveTo(p1x, p1y);
+        path.lineTo(p2x, p2y);
+        path.lineTo(p3x, p3y);
+        path.close();
+
+        canvas.drawPath(path, d.getPaint());
+    }
+
+    private void drawLine(Canvas canvas, Drawing d) {
+        float startX = d.getPoints().get(0);
+        float startY = d.getPoints().get(1);
+        float stopX = d.getPoints().get(2);
+        float stopY = d.getPoints().get(3);
+
+        canvas.drawLine(startX, startY, stopX, stopY, d.getPaint());
     }
 
     public void setListener(tapListener listener) {
@@ -135,26 +148,4 @@ public class CADCanvas extends View {
     public interface tapListener {
         void onTapCanvas(int x, int y);
     }
-
-//    override fun onTouchEvent(event: MotionEvent): Boolean {
-//        val pointerIndex = event.actionIndex
-//
-//        if (verts.size >= 64) {
-//            Toast.makeText(context, "Hit maximum 64 coordinates", Toast.LENGTH_SHORT).show()
-//            return false
-//        }
-//
-//        when (event.actionMasked) {
-//            MotionEvent.ACTION_DOWN,
-//                    MotionEvent.ACTION_POINTER_DOWN -> return true
-//            MotionEvent.ACTION_UP,
-//                    MotionEvent.ACTION_POINTER_UP -> {
-//                verts.add(event.getX(pointerIndex))
-//                verts.add(event.getY(pointerIndex))
-//                invalidate()
-//                return true
-//            }
-//        }
-//        return super.onTouchEvent(event)
-//    }
 }

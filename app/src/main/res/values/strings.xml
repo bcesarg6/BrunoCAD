@@ -8,11 +8,8 @@
 
     <string name="instrucoes_linha">criar linha</string>
     <string name="instrucoes_triangulo">criar triângulo</string>
-    <string name="instrucoes_triangulo_p">criar triângulo preenchido</string>
     <string name="instrucoes_retangulo">criar retângulo</string>
-    <string name="instrucoes_retangulo_p">criar retângulo preenchido</string>
     <string name="instrucoes_circulo">criar círculo</string>
-    <string name="instrucoes_circulo_p">criar círculo preenchido</string>
 
     <string name="toque_1_ponto">toque em 1 ponto no canvas</string>
     <string name="toque_2_pontos">toque em 2 pontos no canvas</string>

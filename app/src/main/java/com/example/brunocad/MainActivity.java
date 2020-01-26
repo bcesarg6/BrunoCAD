@@ -101,32 +101,35 @@ public class MainActivity extends AppCompatActivity implements AdapterMenu.MenuF
                 }
 
                 funcaoSelecionada = botaoClicado.getId();
-                tvToolInfo.setText(botaoClicado.getNome());
 
                 switch (funcaoSelecionada) {
                     case toolsID.LINE:
                         tvToolInfo.setText(R.string.instrucoes_linha);
+                        tvToolInfo.setVisibility(View.VISIBLE);
                         tvContextInfo.setText(R.string.toque_2_pontos);
                         tvContextInfo.setVisibility(View.VISIBLE);
                         break;
 
                     case toolsID.TRIANGLE_STROKE:
                     case toolsID.TRIANGLE:
-                        tvToolInfo.setText(funcaoSelecionada == toolsID.TRIANGLE ? R.string.instrucoes_triangulo_p : R.string.instrucoes_triangulo);
+                        tvToolInfo.setText(R.string.instrucoes_triangulo);
+                        tvToolInfo.setVisibility(View.VISIBLE);
                         tvContextInfo.setText(R.string.toque_3_pontos);
                         tvContextInfo.setVisibility(View.VISIBLE);
                         break;
 
                     case toolsID.RECTANGLE_STROKE:
                     case toolsID.RECTANGLE:
-                        tvToolInfo.setText(funcaoSelecionada == toolsID.RECTANGLE ? R.string.instrucoes_triangulo_p : R.string.instrucoes_retangulo);
+                        tvToolInfo.setText(R.string.instrucoes_retangulo);
+                        tvToolInfo.setVisibility(View.VISIBLE);
                         tvContextInfo.setText(R.string.toque_2_pontos);
                         tvContextInfo.setVisibility(View.VISIBLE);
                         break;
 
                     case toolsID.CIRCLE_STROKE:
                     case toolsID.CIRCLE:
-                        tvToolInfo.setText(funcaoSelecionada == toolsID.CIRCLE ? R.string.instrucoes_circulo_p : R.string.instrucoes_circulo);
+                        tvToolInfo.setText(R.string.instrucoes_circulo);
+                        tvToolInfo.setVisibility(View.VISIBLE);
                         tvContextInfo.setText(R.string.toque_2_pontos);
                         tvContextInfo.setVisibility(View.VISIBLE);
                         break;
@@ -294,6 +297,7 @@ public class MainActivity extends AppCompatActivity implements AdapterMenu.MenuF
     private void cancelOperation() {
         funcaoSelecionada = toolsID.NONE;
         tvToolInfo.setText(R.string.op_cancelada);
+        tvToolInfo.setVisibility(View.VISIBLE);
 
         tvContextInfo.setVisibility(View.INVISIBLE);
         tvTapInfo.setVisibility(View.INVISIBLE);
