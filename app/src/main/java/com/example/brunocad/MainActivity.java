@@ -6,19 +6,10 @@ import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-
-import com.example.brunocad.adapters.AdapterMenu;
-import com.example.brunocad.adapters.BotaoFerramenta;
-import com.example.brunocad.drawings.Circle;
-import com.example.brunocad.drawings.Drawing;
-import com.example.brunocad.drawings.Line;
-import com.example.brunocad.drawings.Rectangle;
-import com.example.brunocad.drawings.Triangle;
-import com.example.brunocad.dialogs.DialogAjuda;
-import com.example.brunocad.utils.CADConstants;
-import com.example.brunocad.utils.CADUtils;
-import com.example.brunocad.utils.Toaster;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -26,10 +17,17 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.view.View;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.widget.TextView;
+import com.example.brunocad.adapters.AdapterMenu;
+import com.example.brunocad.adapters.BotaoFerramenta;
+import com.example.brunocad.dialogs.DialogAjuda;
+import com.example.brunocad.drawings.Circle;
+import com.example.brunocad.drawings.Drawing;
+import com.example.brunocad.drawings.Line;
+import com.example.brunocad.drawings.Rectangle;
+import com.example.brunocad.drawings.Triangle;
+import com.example.brunocad.utils.CADUtils;
+import com.example.brunocad.utils.Toaster;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -105,8 +103,6 @@ public class MainActivity extends AppCompatActivity implements AdapterMenu.MenuF
                 funcaoSelecionada = botaoClicado.getId();
                 tvToolInfo.setText(botaoClicado.getNome());
 
-                int cor;
-
                 switch (funcaoSelecionada) {
                     case toolsID.LINE:
                         tvToolInfo.setText(R.string.instrucoes_linha);
@@ -115,39 +111,24 @@ public class MainActivity extends AppCompatActivity implements AdapterMenu.MenuF
                         break;
 
                     case toolsID.TRIANGLE_STROKE:
-                        tvToolInfo.setText(R.string.instrucoes_triangulo);
-                        tvContextInfo.setText(R.string.toque_3_pontos);
-                        tvContextInfo.setVisibility(View.VISIBLE);
-                        break;
-
                     case toolsID.TRIANGLE:
-                        tvToolInfo.setText(R.string.instrucoes_triangulo_p);
+                        tvToolInfo.setText(funcaoSelecionada == toolsID.TRIANGLE ? R.string.instrucoes_triangulo_p : R.string.instrucoes_triangulo);
                         tvContextInfo.setText(R.string.toque_3_pontos);
                         tvContextInfo.setVisibility(View.VISIBLE);
                         break;
 
                     case toolsID.RECTANGLE_STROKE:
-                        tvToolInfo.setText(R.string.instrucoes_retangulo);
-                        tvContextInfo.setText(R.string.toque_2_pontos);
-                        tvContextInfo.setVisibility(View.VISIBLE);
-                        break;
-
                     case toolsID.RECTANGLE:
-                        tvToolInfo.setText(R.string.instrucoes_retangulo_p);
+                        tvToolInfo.setText(funcaoSelecionada == toolsID.RECTANGLE ? R.string.instrucoes_triangulo_p : R.string.instrucoes_retangulo);
                         tvContextInfo.setText(R.string.toque_2_pontos);
                         tvContextInfo.setVisibility(View.VISIBLE);
                         break;
 
                     case toolsID.CIRCLE_STROKE:
-                        cor = ContextCompat.getColor(this, CADUtils.getNextColor());
-                        Circle circle = new Circle(6,400f,400f,80f, cor, false);
-                        addDrawing(circle);
-                        break;
-
                     case toolsID.CIRCLE:
-                        cor = ContextCompat.getColor(this, CADUtils.getNextColor());
-                        Circle circleFilled = new Circle(7,400f,400f,40f, cor, true);
-                        addDrawing(circleFilled);
+                        tvToolInfo.setText(funcaoSelecionada == toolsID.CIRCLE ? R.string.instrucoes_circulo_p : R.string.instrucoes_circulo);
+                        tvContextInfo.setText(R.string.toque_2_pontos);
+                        tvContextInfo.setVisibility(View.VISIBLE);
                         break;
 
                     default:
@@ -167,32 +148,25 @@ public class MainActivity extends AppCompatActivity implements AdapterMenu.MenuF
         addDrawing(line);
     }
 
-    private void createTriangleStroke(Point p1, Point p2, Point p3) {
+    private void createTriangle(Point p1, Point p2, Point p3, boolean isFill) {
         int cor;
         cor = ContextCompat.getColor(this, CADUtils.getNextColor());
-        Triangle triangle = new Triangle(CADUtils.getNextDrawingId(), p1.x,p1.y, p2.x, p2.y, p3.x, p3.y, cor, false);
+        Triangle triangle = new Triangle(CADUtils.getNextDrawingId(), p1.x,p1.y, p2.x, p2.y, p3.x, p3.y, cor, isFill);
         addDrawing(triangle);
     }
 
-    private void createTriangle(Point p1, Point p2, Point p3) {
+    private void createRectangle(Point start, Point stop, boolean isFill) {
         int cor;
         cor = ContextCompat.getColor(this, CADUtils.getNextColor());
-        Triangle triangle = new Triangle(CADUtils.getNextDrawingId(), p1.x,p1.y, p2.x, p2.y, p3.x, p3.y, cor, true);
-        addDrawing(triangle);
-    }
-
-    private void createRectangleStroke(Point start, Point stop) {
-        int cor;
-        cor = ContextCompat.getColor(this, CADUtils.getNextColor());
-        Rectangle rectangle = new Rectangle(CADUtils.getNextDrawingId(), start.x, start.y, stop.x, stop.y, cor, false);
+        Rectangle rectangle = new Rectangle(CADUtils.getNextDrawingId(), start.x, start.y, stop.x, stop.y, cor, isFill);
         addDrawing(rectangle);
     }
 
-    private void createRectangle(Point start, Point stop) {
+    private void createCircle(Point center, float radius, boolean isFill) {
         int cor;
         cor = ContextCompat.getColor(this, CADUtils.getNextColor());
-        Rectangle rectangle = new Rectangle(CADUtils.getNextDrawingId(), start.x, start.y, stop.x, stop.y, cor, true);
-        addDrawing(rectangle);
+        Circle circle = new Circle(CADUtils.getNextDrawingId(),center.x, center.y,radius, cor, isFill);
+        addDrawing(circle);
     }
 
     @SuppressLint("DefaultLocale")
@@ -226,29 +200,10 @@ public class MainActivity extends AppCompatActivity implements AdapterMenu.MenuF
                 break;
 
             case toolsID.TRIANGLE_STROKE:
-
-                if (coordinates.size() >= 3) {
-                    createTriangleStroke(coordinates.get(0), coordinates.get(1), coordinates.get(2));
-                    draw();
-
-                    Toaster.shortToast(getString(R.string.triangulo_criada), this);
-
-                    tvContextInfo.setText(R.string.toque_3_pontos);
-                    tvContextInfo.setVisibility(View.VISIBLE);
-
-                    coordinates.clear();
-
-                } else {
-                    tvContextInfo.setText(coordinates.size() < 2 ? R.string.toque_2_pontos : R.string.toque_1_ponto);
-                    tvContextInfo.setVisibility(View.VISIBLE);
-                }
-
-                break;
-
             case toolsID.TRIANGLE:
 
                 if (coordinates.size() >= 3) {
-                    createTriangle(coordinates.get(0), coordinates.get(1), coordinates.get(2));
+                    createTriangle(coordinates.get(0), coordinates.get(1), coordinates.get(2), funcaoSelecionada == toolsID.TRIANGLE ? true : false);
                     draw();
 
                     Toaster.shortToast(getString(R.string.triangulo_criada), this);
@@ -266,41 +221,6 @@ public class MainActivity extends AppCompatActivity implements AdapterMenu.MenuF
                 break;
 
             case toolsID.RECTANGLE_STROKE:
-
-                if (coordinates.size() >= 2) {
-
-                    Point start = coordinates.get(0);
-                    Point stop = coordinates.get(1);
-
-                    if (start.x > stop.x) {
-                        int aux = start.x;
-                        start.x = stop.x;
-                        stop.x = aux;
-                    }
-
-                    if (start.y > stop.y) {
-                        int aux = start.y;
-                        start.y = stop.y;
-                        stop.y = aux;
-                    }
-
-                    createRectangleStroke(start, stop);
-                    draw();
-
-                    Toaster.shortToast(getString(R.string.retangulo_criada), this);
-
-                    tvContextInfo.setText(R.string.toque_2_pontos);
-                    tvContextInfo.setVisibility(View.VISIBLE);
-
-                    coordinates.clear();
-
-                } else {
-                    tvContextInfo.setText(R.string.toque_1_ponto);
-                    tvContextInfo.setVisibility(View.VISIBLE);
-                }
-
-                break;
-
             case toolsID.RECTANGLE:
 
                 if (coordinates.size() >= 2) {
@@ -320,7 +240,7 @@ public class MainActivity extends AppCompatActivity implements AdapterMenu.MenuF
                         stop.y = aux;
                     }
 
-                    createRectangle(start, stop);
+                    createRectangle(start, stop, funcaoSelecionada == toolsID.RECTANGLE ? true : false);
                     draw();
 
                     Toaster.shortToast(getString(R.string.retangulo_criada), this);
@@ -338,9 +258,30 @@ public class MainActivity extends AppCompatActivity implements AdapterMenu.MenuF
                 break;
 
             case toolsID.CIRCLE_STROKE:
-                break;
-
             case toolsID.CIRCLE:
+
+                if (coordinates.size() >= 2) {
+
+                    Point center = coordinates.get(0);
+                    Point border = coordinates.get(1);
+
+                    double radius = Math.sqrt(Math.pow((double) (border.x - center.x), 2f) + Math.pow((double) (border.y - center.y), 2f));
+
+                    createCircle(center, (float) radius, funcaoSelecionada == toolsID.CIRCLE ? true : false);
+                    draw();
+
+                    Toaster.shortToast(getString(R.string.ciruclo_criada), this);
+
+                    tvContextInfo.setText(R.string.toque_2_pontos);
+                    tvContextInfo.setVisibility(View.VISIBLE);
+
+                    coordinates.clear();
+
+                } else {
+                    tvContextInfo.setText(R.string.toque_1_ponto);
+                    tvContextInfo.setVisibility(View.VISIBLE);
+                }
+
                 break;
 
             default:
