@@ -75,4 +75,15 @@ public class CADUtils {
 
         return ferramentasEditar;
     }
+
+    public static List<Integer> getOffsetTranslacao() {
+        List<Integer> offsets = new ArrayList<>();
+
+        offsets.add(10);
+        offsets.add(20);
+        offsets.add(50);
+        offsets.add(100);
+
+        return offsets;
+    }
 }

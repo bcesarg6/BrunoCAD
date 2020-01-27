@@ -1,9 +1,10 @@
 package com.example.brunocad.drawings;
 
-import com.example.brunocad.utils.CADConstants;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.example.brunocad.utils.CADConstants.drawingTypes.TRIANGLE;
+import static com.example.brunocad.utils.CADConstants.drawingTypes.TRIANGLE_STROKE;
 
 public class Triangle extends Drawing {
 
@@ -13,18 +14,18 @@ public class Triangle extends Drawing {
                     float p3x, float p3y,
                     int cor, boolean isFill) {
 
-        super(id, CADConstants.drawingTypes.TRIANGLE, cor);
+        super(id, isFill ? TRIANGLE : TRIANGLE_STROKE, cor);
 
-        List<Float> points = new ArrayList<>();
+        List<Float> values = new ArrayList<>();
 
-        points.add(p1x);
-        points.add(p1y);
-        points.add(p2x);
-        points.add(p2y);
-        points.add(p3x);
-        points.add(p3y);
+        values.add(p1x);
+        values.add(p1y);
+        values.add(p2x);
+        values.add(p2y);
+        values.add(p3x);
+        values.add(p3y);
 
-        setPoints(points);
+        setValues(values);
         configPaint(true, isFill, true);
     }
 }

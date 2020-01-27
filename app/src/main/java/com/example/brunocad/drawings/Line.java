@@ -10,14 +10,14 @@ public class Line extends Drawing {
     public Line(long id, float startX, float startY, float stopX, float stopY, int cor) {
         super(id, CADConstants.drawingTypes.LINE, cor);
 
-        List<Float> points = new ArrayList<>();
+        List<Float> values = new ArrayList<>();
 
-        points.add(startX);
-        points.add(startY);
-        points.add(stopX);
-        points.add(stopY);
+        values.add(startX);
+        values.add(startY);
+        values.add(stopX);
+        values.add(stopY);
 
-        setPoints(points);
+        setValues(values);
         configPaint(true, true, true);
     }
 }

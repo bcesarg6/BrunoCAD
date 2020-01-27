@@ -1,23 +1,35 @@
 package com.example.brunocad.drawings;
 
-import com.example.brunocad.utils.CADConstants;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.example.brunocad.utils.CADConstants.drawingTypes.RECTANGLE;
+import static com.example.brunocad.utils.CADConstants.drawingTypes.RECTANGLE_STROKE;
 
 public class Rectangle extends Drawing {
 
     public Rectangle(long id, float left, float top, float right, float bottom, int cor, boolean isFill) {
-        super(id, CADConstants.drawingTypes.RECTANGLE, cor);
+        super(id, isFill ? RECTANGLE : RECTANGLE_STROKE, cor);
 
-        List<Float> points = new ArrayList<>();
+        List<Float> values = new ArrayList<>();
 
-        points.add(left);
-        points.add(top);
-        points.add(right);
-        points.add(bottom);
+        values.add(left);
+        values.add(top);
+        values.add(right);
+        values.add(bottom);
 
-        setPoints(points);
+        setValues(values);
         configPaint(true, isFill, true);
+    }
+
+    public void UpdateRectangle(float left, float top, float right, float bottom) {
+        List<Float> values = new ArrayList<>();
+
+        values.add(left);
+        values.add(top);
+        values.add(right);
+        values.add(bottom);
+
+        setValues(values);
     }
 }

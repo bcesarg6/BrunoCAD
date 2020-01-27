@@ -67,7 +67,7 @@
     <androidx.cardview.widget.CardView
         android:id="@+id/card_menu"
         android:layout_width="match_parent"
-        android:layout_height="140dp"
+        android:layout_height="150dp"
         android:elevation="8dp"
         app:cardElevation="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -134,7 +134,7 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_criar"
                 android:layout_width="match_parent"
-                android:layout_height="110dp"
+                android:layout_height="120dp"
                 android:paddingTop="5dp"
                 android:paddingBottom="5dp"
                 android:visibility="visible"
@@ -144,31 +144,42 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_ferramentas"
                 android:layout_width="match_parent"
-                android:layout_height="110dp"
+                android:layout_height="120dp"
                 android:paddingTop="5dp"
                 android:paddingBottom="5dp"
-                android:visibility="gone"
+                android:visibility="invisible"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent" />
 
+            <LinearLayout
+                android:id="@+id/ll_editar"
+                android:layout_width="match_parent"
+                android:layout_height="120dp"
+                android:orientation="horizontal"
+                android:paddingTop="5dp"
+                android:paddingBottom="5dp"
+                android:visibility="invisible"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent">
+
+                <TextView
+                    android:id="@+id/tv_nenhuma_ferramenta"
+                    android:visibility="visible"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginBottom="10dp"
+                    android:gravity="center"
+                    android:text="@string/nenhuma_ferramenta_selecionada"
+                    android:textAlignment="center"
+                    android:textSize="15sp" />
+
+                <include layout="@layout/layout_ferramenta_translacao" />
+
+
+            </LinearLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
 
     </androidx.cardview.widget.CardView>
-
-<!--    <com.google.android.material.floatingactionbutton.FloatingActionButton-->
-<!--        android:id="@+id/fab_acao"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_marginEnd="15dp"-->
-<!--        android:src="@drawable/ic_criar"-->
-<!--        app:fabCustomSize="70dp"-->
-<!--        app:layout_constraintBottom_toBottomOf="parent"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintTop_toTopOf="parent"-->
-<!--        app:maxImageSize="40dp" />-->
-
-
-
 </androidx.constraintlayout.widget.ConstraintLayout>

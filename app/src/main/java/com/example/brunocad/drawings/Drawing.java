@@ -1,7 +1,9 @@
 package com.example.brunocad.drawings;
 
 import android.graphics.Paint;
+import android.graphics.Point;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Drawing {
@@ -10,7 +12,8 @@ public class Drawing {
     private int tipo;
     private int cor;
 
-    private List<Float> points = null;
+    private List<Point> points = new ArrayList<>();
+    private List<Float> values = null;
     private Paint paint = null;
 
     public Drawing(long id, int tipo, int cor) {
@@ -22,7 +25,7 @@ public class Drawing {
     public void configPaint(boolean isAntiAlias, boolean isFill, boolean isStroke) {
         paint = new Paint();
         paint.setColor(cor);
-        paint.setStrokeWidth(3f);
+        paint.setStrokeWidth(9f);
 
         if (isAntiAlias) paint.setFlags(Paint.ANTI_ALIAS_FLAG);
 
@@ -45,12 +48,12 @@ public class Drawing {
         this.id = id;
     }
 
-    public List<Float> getPoints() {
-        return points;
+    public List<Float> getValues() {
+        return values;
     }
 
-    public void setPoints(List<Float> points) {
-        this.points = points;
+    public void setValues(List<Float> values) {
+        this.values = values;
     }
 
     public Paint getPaint() {
@@ -63,5 +66,17 @@ public class Drawing {
 
     public int getTipo() {
         return tipo;
+    }
+
+    public void addPoint(Point point) {
+        points.add(point);
+    }
+
+    public List<Point> getPoints() {
+        return points;
+    }
+
+    public void clearPoints() {
+        points.clear();
     }
 }

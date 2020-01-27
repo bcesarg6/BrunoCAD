@@ -1,22 +1,31 @@
 package com.example.brunocad.drawings;
 
-import com.example.brunocad.utils.CADConstants;
-
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.example.brunocad.utils.CADConstants.drawingTypes.CIRCLE;
+import static com.example.brunocad.utils.CADConstants.drawingTypes.CIRCLE_STROKE;
+
 public class Circle extends Drawing {
 
+    private float radius;
+
     public Circle(long id, float centerX, float centerY, float radius, int cor, boolean isFill) {
-        super(id, CADConstants.drawingTypes.CIRCLE, cor);
+        super(id, isFill ? CIRCLE : CIRCLE_STROKE, cor);
 
-        List<Float> points = new ArrayList<>();
+        List<Float> values = new ArrayList<>();
 
-        points.add(centerX);
-        points.add(centerY);
-        points.add(radius);
+        values.add(centerX);
+        values.add(centerY);
+        values.add(radius);
 
-        setPoints(points);
+        setValues(values);
         configPaint(true, isFill, true);
+
+        this.radius = radius;
+    }
+
+    public float getRadius() {
+        return radius;
     }
 }

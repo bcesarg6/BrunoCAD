@@ -55,14 +55,17 @@ public class CADCanvas extends View {
                     drawLine(canvas, d);
                     break;
 
+                case drawingTypes.TRIANGLE_STROKE:
                 case drawingTypes.TRIANGLE:
                     drawTriangle(canvas, d);
                     break;
 
+                case drawingTypes.RECTANGLE_STROKE:
                 case drawingTypes.RECTANGLE:
                     drawRectangle(canvas, d);
                     break;
 
+                case drawingTypes.CIRCLE_STROKE:
                 case drawingTypes.CIRCLE:
                     drawCircle(canvas, d);
                     break;
@@ -74,31 +77,31 @@ public class CADCanvas extends View {
     }
 
     private void drawCircle(Canvas canvas, Drawing d) {
-        float cx = d.getPoints().get(0);
-        float cy = d.getPoints().get(1);
-        float radius = d.getPoints().get(2);
+        float cx = d.getValues().get(0);
+        float cy = d.getValues().get(1);
+        float radius = d.getValues().get(2);
 
         canvas.drawCircle(cx, cy, radius, d.getPaint());
     }
 
     private void drawRectangle(Canvas canvas, Drawing d) {
-        float left = d.getPoints().get(0);
-        float top = d.getPoints().get(1);
-        float right = d.getPoints().get(2);
-        float bottom = d.getPoints().get(3);
+        float left = d.getValues().get(0);
+        float top = d.getValues().get(1);
+        float right = d.getValues().get(2);
+        float bottom = d.getValues().get(3);
 
         canvas.drawRect(new RectF(left,top,right,bottom),d.getPaint());
     }
 
     private void drawTriangle(Canvas canvas, Drawing d) {
-        float p1x = d.getPoints().get(0);
-        float p1y = d.getPoints().get(1);
+        float p1x = d.getValues().get(0);
+        float p1y = d.getValues().get(1);
 
-        float p2x = d.getPoints().get(2);
-        float p2y = d.getPoints().get(3);
+        float p2x = d.getValues().get(2);
+        float p2y = d.getValues().get(3);
 
-        float p3x = d.getPoints().get(4);
-        float p3y = d.getPoints().get(5);
+        float p3x = d.getValues().get(4);
+        float p3y = d.getValues().get(5);
 
         Path path = new Path();
         path.setFillType(Path.FillType.EVEN_ODD);
@@ -111,10 +114,10 @@ public class CADCanvas extends View {
     }
 
     private void drawLine(Canvas canvas, Drawing d) {
-        float startX = d.getPoints().get(0);
-        float startY = d.getPoints().get(1);
-        float stopX = d.getPoints().get(2);
-        float stopY = d.getPoints().get(3);
+        float startX = d.getValues().get(0);
+        float startY = d.getValues().get(1);
+        float stopX = d.getValues().get(2);
+        float stopY = d.getValues().get(3);
 
         canvas.drawLine(startX, startY, stopX, stopY, d.getPaint());
     }

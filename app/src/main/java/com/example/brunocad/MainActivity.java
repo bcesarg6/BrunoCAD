@@ -8,10 +8,14 @@ import android.graphics.Point;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -24,17 +28,22 @@ import com.example.brunocad.drawings.Drawing;
 import com.example.brunocad.drawings.Line;
 import com.example.brunocad.drawings.Rectangle;
 import com.example.brunocad.drawings.Triangle;
+import com.example.brunocad.utils.CADConstants;
 import com.example.brunocad.utils.CADConstants.TabsID;
 import com.example.brunocad.utils.CADUtils;
 import com.example.brunocad.utils.Toaster;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import fr.ganfra.materialspinner.MaterialSpinner;
 
+import static com.example.brunocad.utils.CADConstants.drawingTypes;
 import static com.example.brunocad.utils.CADConstants.toolsID;
 
 public class MainActivity extends AppCompatActivity implements AdapterMenu.MenuFerramentas, CADCanvas.tapListener {
@@ -51,6 +60,13 @@ public class MainActivity extends AppCompatActivity implements AdapterMenu.MenuF
 
     @BindView(R.id.rv_criar) RecyclerView rvCriar;
     @BindView(R.id.rv_ferramentas) RecyclerView rvFerramentas;
+    @BindView(R.id.ll_editar) LinearLayout llEditar;
+
+    @BindView(R.id.tv_nenhuma_ferramenta) TextView tvNenhumaFerramenta;
+
+    @BindView(R.id.ct_translacao) ConstraintLayout ctTranslacao;
+    @BindView(R.id.tv_ids_selecionados_translacao) TextView tvIdsSelecionadosTranslacao;
+    @BindView(R.id.spinner_valor_translacao) MaterialSpinner spinnerValorTranslacao;
 
     private int abaSelecionada = TabsID.CREATE;
 
@@ -59,7 +75,10 @@ public class MainActivity extends AppCompatActivity implements AdapterMenu.MenuF
 
     private int funcaoSelecionada = toolsID.NONE;
 
-    List<Drawing> drawings = new ArrayList<>();
+    private List<Long> objetosSelecionados = new ArrayList<>();
+    private Integer offsetTranslacao = 10;
+
+    Map<Long, Drawing> drawingMap = new HashMap<>();
     List<Point> coordinates = new ArrayList<>();
 
     @Override
@@ -83,6 +102,19 @@ public class MainActivity extends AppCompatActivity implements AdapterMenu.MenuF
 
         rvFerramentas.setLayoutManager(new LinearLayoutManager(this, RecyclerView.HORIZONTAL, false));
         rvFerramentas.setAdapter(adapterMenuEditar);
+
+        spinnerValorTranslacao.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, CADUtils.getOffsetTranslacao()));
+        spinnerValorTranslacao.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                offsetTranslacao = CADUtils.getOffsetTranslacao().get(position);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                offsetTranslacao = 0;
+            }
+        });
     }
 
     @Override
@@ -95,12 +127,16 @@ public class MainActivity extends AppCompatActivity implements AdapterMenu.MenuF
             if (funcaoSelecionada == botaoClicado.getId()) cancelOperation();
             else {
 
-                if (funcaoSelecionada != toolsID.NONE && !coordinates.isEmpty()) {
-                    Toaster.shortToast("operação anterior cancelada", this);
+                if (funcaoSelecionada != toolsID.NONE) {
 
                     tvTapInfo.setVisibility(View.INVISIBLE);
 
-                    coordinates.clear();
+                    resetaFuncaoEdicao();
+
+                    if (!coordinates.isEmpty()) {
+                        Toaster.shortToast("operação anterior cancelada", this);
+                        coordinates.clear();
+                    }
                 }
 
                 funcaoSelecionada = botaoClicado.getId();
@@ -137,6 +173,20 @@ public class MainActivity extends AppCompatActivity implements AdapterMenu.MenuF
                         tvContextInfo.setVisibility(View.VISIBLE);
                         break;
 
+                    case toolsID.TRANSLATION:
+                        tvNenhumaFerramenta.setVisibility(View.GONE);
+
+                        tvToolInfo.setText(R.string.instrucoes_translacao);
+                        tvToolInfo.setVisibility(View.VISIBLE);
+
+                        tvContextInfo.setText(R.string.selecione_objeto);
+                        tvContextInfo.setVisibility(View.VISIBLE);
+
+                        ctTranslacao.setVisibility(View.VISIBLE);
+
+                        btnAbaEditar.performClick();
+                        break;
+
                     default:
                         break;
                 }
@@ -151,6 +201,10 @@ public class MainActivity extends AppCompatActivity implements AdapterMenu.MenuF
         int cor;
         cor = ContextCompat.getColor(this, CADUtils.getNextColor());
         Line line = new Line(CADUtils.getNextDrawingId(), start.x, start.y, stop.x, stop.y, cor);
+
+        line.addPoint(start);
+        line.addPoint(stop);
+
         addDrawing(line);
     }
 
@@ -158,6 +212,11 @@ public class MainActivity extends AppCompatActivity implements AdapterMenu.MenuF
         int cor;
         cor = ContextCompat.getColor(this, CADUtils.getNextColor());
         Triangle triangle = new Triangle(CADUtils.getNextDrawingId(), p1.x,p1.y, p2.x, p2.y, p3.x, p3.y, cor, isFill);
+
+        triangle.addPoint(p1);
+        triangle.addPoint(p2);
+        triangle.addPoint(p3);
+
         addDrawing(triangle);
     }
 
@@ -165,6 +224,10 @@ public class MainActivity extends AppCompatActivity implements AdapterMenu.MenuF
         int cor;
         cor = ContextCompat.getColor(this, CADUtils.getNextColor());
         Rectangle rectangle = new Rectangle(CADUtils.getNextDrawingId(), start.x, start.y, stop.x, stop.y, cor, isFill);
+
+        rectangle.addPoint(start);
+        rectangle.addPoint(stop);
+
         addDrawing(rectangle);
     }
 
@@ -172,6 +235,9 @@ public class MainActivity extends AppCompatActivity implements AdapterMenu.MenuF
         int cor;
         cor = ContextCompat.getColor(this, CADUtils.getNextColor());
         Circle circle = new Circle(CADUtils.getNextDrawingId(),center.x, center.y,radius, cor, isFill);
+
+        circle.addPoint(center);
+
         addDrawing(circle);
     }
 
@@ -181,122 +247,184 @@ public class MainActivity extends AppCompatActivity implements AdapterMenu.MenuF
         tvTapInfo.setText(String.format("(%d,%d)", x, y));
         tvTapInfo.setVisibility(View.VISIBLE);
 
-        coordinates.add(new Point(x,y));
+        if (isCreating()) {
+            coordinates.add(new Point(x,y));
 
-        switch (funcaoSelecionada) {
+            switch (funcaoSelecionada) {
 
-            case toolsID.LINE:
+                case toolsID.LINE:
 
-                if (coordinates.size() >= 2) {
-                    createLine(coordinates.get(0), coordinates.get(1));
-                    draw();
+                    if (coordinates.size() >= 2) {
+                        createLine(coordinates.get(0), coordinates.get(1));
+                        draw();
 
-                    Toaster.shortToast(getString(R.string.linha_criada), this);
+                        Toaster.shortToast(getString(R.string.linha_criada), this);
 
-                    tvContextInfo.setText(R.string.toque_2_pontos);
-                    tvContextInfo.setVisibility(View.VISIBLE);
+                        tvContextInfo.setText(R.string.toque_2_pontos);
+                        tvContextInfo.setVisibility(View.VISIBLE);
 
-                    coordinates.clear();
+                        coordinates.clear();
 
-                } else {
-                    tvContextInfo.setText(R.string.toque_1_ponto);
-                    tvContextInfo.setVisibility(View.VISIBLE);
-                }
-
-                break;
-
-            case toolsID.TRIANGLE_STROKE:
-            case toolsID.TRIANGLE:
-
-                if (coordinates.size() >= 3) {
-                    createTriangle(coordinates.get(0), coordinates.get(1), coordinates.get(2), funcaoSelecionada == toolsID.TRIANGLE ? true : false);
-                    draw();
-
-                    Toaster.shortToast(getString(R.string.triangulo_criada), this);
-
-                    tvContextInfo.setText(R.string.toque_3_pontos);
-                    tvContextInfo.setVisibility(View.VISIBLE);
-
-                    coordinates.clear();
-
-                } else {
-                    tvContextInfo.setText(coordinates.size() < 2 ? R.string.toque_2_pontos : R.string.toque_1_ponto);
-                    tvContextInfo.setVisibility(View.VISIBLE);
-                }
-
-                break;
-
-            case toolsID.RECTANGLE_STROKE:
-            case toolsID.RECTANGLE:
-
-                if (coordinates.size() >= 2) {
-
-                    Point start = coordinates.get(0);
-                    Point stop = coordinates.get(1);
-
-                    if (start.x > stop.x) {
-                        int aux = start.x;
-                        start.x = stop.x;
-                        stop.x = aux;
+                    } else {
+                        tvContextInfo.setText(R.string.toque_1_ponto);
+                        tvContextInfo.setVisibility(View.VISIBLE);
                     }
 
-                    if (start.y > stop.y) {
-                        int aux = start.y;
-                        start.y = stop.y;
-                        stop.y = aux;
+                    break;
+
+                case toolsID.TRIANGLE_STROKE:
+                case toolsID.TRIANGLE:
+
+                    if (coordinates.size() >= 3) {
+                        createTriangle(coordinates.get(0), coordinates.get(1), coordinates.get(2), funcaoSelecionada == toolsID.TRIANGLE ? true : false);
+                        draw();
+
+                        Toaster.shortToast(getString(R.string.triangulo_criada), this);
+
+                        tvContextInfo.setText(R.string.toque_3_pontos);
+                        tvContextInfo.setVisibility(View.VISIBLE);
+
+                        coordinates.clear();
+
+                    } else {
+                        tvContextInfo.setText(coordinates.size() < 2 ? R.string.toque_2_pontos : R.string.toque_1_ponto);
+                        tvContextInfo.setVisibility(View.VISIBLE);
                     }
 
-                    createRectangle(start, stop, funcaoSelecionada == toolsID.RECTANGLE ? true : false);
-                    draw();
+                    break;
 
-                    Toaster.shortToast(getString(R.string.retangulo_criada), this);
+                case toolsID.RECTANGLE_STROKE:
+                case toolsID.RECTANGLE:
 
-                    tvContextInfo.setText(R.string.toque_2_pontos);
-                    tvContextInfo.setVisibility(View.VISIBLE);
+                    if (coordinates.size() >= 2) {
 
-                    coordinates.clear();
+                        Point start = coordinates.get(0);
+                        Point stop = coordinates.get(1);
 
-                } else {
-                    tvContextInfo.setText(R.string.toque_1_ponto);
-                    tvContextInfo.setVisibility(View.VISIBLE);
+                        if (start.x > stop.x) {
+                            int aux = start.x;
+                            start.x = stop.x;
+                            stop.x = aux;
+                        }
+
+                        if (start.y > stop.y) {
+                            int aux = start.y;
+                            start.y = stop.y;
+                            stop.y = aux;
+                        }
+
+                        createRectangle(start, stop, funcaoSelecionada == toolsID.RECTANGLE ? true : false);
+                        draw();
+
+                        Toaster.shortToast(getString(R.string.retangulo_criada), this);
+
+                        tvContextInfo.setText(R.string.toque_2_pontos);
+                        tvContextInfo.setVisibility(View.VISIBLE);
+
+                        coordinates.clear();
+
+                    } else {
+                        tvContextInfo.setText(R.string.toque_1_ponto);
+                        tvContextInfo.setVisibility(View.VISIBLE);
+                    }
+
+                    break;
+
+                case toolsID.CIRCLE_STROKE:
+                case toolsID.CIRCLE:
+
+                    if (coordinates.size() >= 2) {
+
+                        Point center = coordinates.get(0);
+                        Point border = coordinates.get(1);
+
+                        double radius = Math.sqrt(Math.pow((double) (border.x - center.x), 2f) + Math.pow((double) (border.y - center.y), 2f));
+
+                        createCircle(center, (float) radius, funcaoSelecionada == toolsID.CIRCLE ? true : false);
+                        draw();
+
+                        Toaster.shortToast(getString(R.string.ciruclo_criada), this);
+
+                        tvContextInfo.setText(R.string.toque_2_pontos);
+                        tvContextInfo.setVisibility(View.VISIBLE);
+
+                        coordinates.clear();
+
+                    } else {
+                        tvContextInfo.setText(R.string.toque_1_ponto);
+                        tvContextInfo.setVisibility(View.VISIBLE);
+                    }
+
+                    break;
+
+                default:
+                    break;
+            }
+
+        } else if (isEditing()) {
+            Point tap = new Point(x,y);
+
+            for (Drawing d : drawingMap.values()) {
+                if (d.getTipo() == CADConstants.drawingTypes.RECTANGLE) {
+
+                    Point start = d.getPoints().get(0);
+                    Point stop = d.getPoints().get(1);
+
+                    if (tap.x > start.x && tap.x < stop.x && tap.y > start.y && tap.y < stop.y) {
+                        if (objetosSelecionados.contains(d.getId())) objetosSelecionados.remove(d.getId());
+                        else objetosSelecionados.add(d.getId());
+                    }
+
                 }
+            }
 
-                break;
+            String idsSelecionados = "";
 
-            case toolsID.CIRCLE_STROKE:
-            case toolsID.CIRCLE:
+            switch (funcaoSelecionada) {
+                case toolsID.TRANSLATION:
 
-                if (coordinates.size() >= 2) {
+                    if (!objetosSelecionados.isEmpty()) {
+                        for (Long id : objetosSelecionados) idsSelecionados += "#" + id + " ";
+                        tvIdsSelecionadosTranslacao.setText(idsSelecionados);
+                    } else {
+                        tvIdsSelecionadosTranslacao.setText(R.string.sem_objetos_selecionados);
+                    }
 
-                    Point center = coordinates.get(0);
-                    Point border = coordinates.get(1);
+                    break;
 
-                    double radius = Math.sqrt(Math.pow((double) (border.x - center.x), 2f) + Math.pow((double) (border.y - center.y), 2f));
-
-                    createCircle(center, (float) radius, funcaoSelecionada == toolsID.CIRCLE ? true : false);
-                    draw();
-
-                    Toaster.shortToast(getString(R.string.ciruclo_criada), this);
-
-                    tvContextInfo.setText(R.string.toque_2_pontos);
-                    tvContextInfo.setVisibility(View.VISIBLE);
-
-                    coordinates.clear();
-
-                } else {
-                    tvContextInfo.setText(R.string.toque_1_ponto);
-                    tvContextInfo.setVisibility(View.VISIBLE);
-                }
-
-                break;
-
-            default:
-                break;
+                default:
+                    break;
+            }
         }
-
     }
 
-    //deseleciona a ferramenta e reseta a lista de coordenadas
+    private boolean isCreating() {
+        boolean isCreating = false;
+
+        isCreating = isCreating || funcaoSelecionada == toolsID.LINE;
+        isCreating = isCreating || funcaoSelecionada == toolsID.TRIANGLE_STROKE;
+        isCreating = isCreating || funcaoSelecionada == toolsID.TRIANGLE;
+        isCreating = isCreating || funcaoSelecionada == toolsID.RECTANGLE_STROKE;
+        isCreating = isCreating || funcaoSelecionada == toolsID.RECTANGLE;
+        isCreating = isCreating || funcaoSelecionada == toolsID.CIRCLE_STROKE;
+        isCreating = isCreating || funcaoSelecionada == toolsID.CIRCLE;
+
+        return isCreating;
+    }
+
+    private boolean isEditing() {
+        boolean isEditing = false;
+
+        isEditing = isEditing || funcaoSelecionada == toolsID.TRANSLATION;
+        isEditing = isEditing || funcaoSelecionada == toolsID.ROTATION;
+        isEditing = isEditing || funcaoSelecionada == toolsID.CHANGE_ESCALE;
+
+        return isEditing;
+    }
+
+    /**
+     * deseleciona a ferramenta e reseta a lista de coordenadas
+     */
     private void cancelOperation() {
         funcaoSelecionada = toolsID.NONE;
         tvToolInfo.setText(R.string.op_cancelada);
@@ -319,10 +447,12 @@ public class MainActivity extends AppCompatActivity implements AdapterMenu.MenuF
     }
 
     private void addDrawing(Drawing drawing) {
-        drawings.add(drawing);
+        drawingMap.put(drawing.getId(), drawing);
     }
 
-    //limpa o canvas e a lista de drawings
+    /**
+     * limpa o canvas e a lista de drawings
+     */
     private void onClearClicked() {
         clear();
         Toaster.shortToast("canvas limpo", this);
@@ -331,15 +461,84 @@ public class MainActivity extends AppCompatActivity implements AdapterMenu.MenuF
 
         tvContextInfo.setVisibility(View.INVISIBLE);
         tvTapInfo.setVisibility(View.INVISIBLE);
+
+        resetaFuncaoEdicao();
+    }
+
+    private void resetaFuncaoEdicao() {
+        tvNenhumaFerramenta.setVisibility(View.VISIBLE);
+        ctTranslacao.setVisibility(View.GONE);
+        // TODO: 1/26/20 adicionar o resto dos containers de edição aqui
     }
 
     private void clear() {
-        drawings.clear();
+        drawingMap.clear();
         canvas.clearCanvas();
     }
 
     private void draw() {
-        canvas.draw(drawings);
+        canvas.draw(new ArrayList<>(drawingMap.values()));
+    }
+
+    private void translateDrawingsBy(float x, float y) {
+        boolean success = false;
+
+        for (Long id : objetosSelecionados) {
+            if (drawingMap.containsKey(id)) {
+                Drawing d = drawingMap.get(id);
+
+                switch (d.getTipo()) {
+                    case drawingTypes.RECTANGLE:
+                    case drawingTypes.RECTANGLE_STROKE:
+
+                        Point start = d.getPoints().get(0);
+                        Point stop = d.getPoints().get(1);
+
+                        start.x += x;
+                        start.y += y;
+
+                        stop.x += x;
+                        stop.y += y;
+
+                        d.clearPoints();
+                        d.addPoint(start);
+                        d.addPoint(stop);
+
+                        ((Rectangle)d).UpdateRectangle(start.x, start.y, stop.x, stop.y);
+                        drawingMap.put(id,d);
+                        success = true;
+
+                        break;
+
+                    default:
+                        break;
+                }
+
+            }
+        }
+
+        if (success) draw();
+        else Toaster.longToast("operação não realizada: nenhum objeto selecionado", this);
+    }
+
+    @OnClick(R.id.btn_esquerda)
+    void transladarEsq() {
+        translateDrawingsBy(offsetTranslacao * -1.0f,0f);
+    }
+
+    @OnClick(R.id.btn_cima)
+    void transladarCima() {
+        translateDrawingsBy(0f,offsetTranslacao * -1.0f);
+    }
+
+    @OnClick(R.id.btn_direita)
+    void transladarDir() {
+        translateDrawingsBy(offsetTranslacao,0f);
+    }
+
+    @OnClick(R.id.btn_baixo)
+    void transladarBaixo() {
+        translateDrawingsBy(0f,offsetTranslacao);
     }
 
     @OnClick(R.id.btn_aba_criar)
@@ -360,6 +559,7 @@ public class MainActivity extends AppCompatActivity implements AdapterMenu.MenuF
             btnAbaEditar.setCompoundDrawableTintList(ColorStateList.valueOf(getColor(R.color.cinzaClaro)));
 
             rvFerramentas.setVisibility(View.INVISIBLE);
+            llEditar.setVisibility(View.INVISIBLE);
             rvCriar.setVisibility(View.VISIBLE);
         }
     }
@@ -383,6 +583,7 @@ public class MainActivity extends AppCompatActivity implements AdapterMenu.MenuF
 
 
             rvCriar.setVisibility(View.INVISIBLE);
+            llEditar.setVisibility(View.INVISIBLE);
             rvFerramentas.setVisibility(View.VISIBLE);
         }
     }
@@ -406,7 +607,7 @@ public class MainActivity extends AppCompatActivity implements AdapterMenu.MenuF
 
             rvCriar.setVisibility(View.INVISIBLE);
             rvFerramentas.setVisibility(View.INVISIBLE);
-            // TODO: 1/26/20
+            llEditar.setVisibility(View.VISIBLE);
         }
     }
 
