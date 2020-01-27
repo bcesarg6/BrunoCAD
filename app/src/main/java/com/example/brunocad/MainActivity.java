@@ -28,7 +28,6 @@ import com.example.brunocad.drawings.Drawing;
 import com.example.brunocad.drawings.Line;
 import com.example.brunocad.drawings.Rectangle;
 import com.example.brunocad.drawings.Triangle;
-import com.example.brunocad.utils.CADConstants;
 import com.example.brunocad.utils.CADConstants.TabsID;
 import com.example.brunocad.utils.CADUtils;
 import com.example.brunocad.utils.Toaster;
@@ -67,6 +66,9 @@ public class MainActivity extends AppCompatActivity implements AdapterMenu.MenuF
     @BindView(R.id.ct_translacao) ConstraintLayout ctTranslacao;
     @BindView(R.id.tv_ids_selecionados_translacao) TextView tvIdsSelecionadosTranslacao;
     @BindView(R.id.spinner_valor_translacao) MaterialSpinner spinnerValorTranslacao;
+
+    @BindView(R.id.ct_mudanca_escala) ConstraintLayout ctMudancaEscala;
+    @BindView(R.id.tv_ids_selecionados_escala) TextView tvIdsSelecionadosEscala;
 
     private int abaSelecionada = TabsID.CREATE;
 
@@ -182,7 +184,27 @@ public class MainActivity extends AppCompatActivity implements AdapterMenu.MenuF
                         tvContextInfo.setText(R.string.selecione_objeto);
                         tvContextInfo.setVisibility(View.VISIBLE);
 
+                        ctMudancaEscala.setVisibility(View.GONE);
+                        // TODO: 1/27/20 add restante
+
                         ctTranslacao.setVisibility(View.VISIBLE);
+
+                        btnAbaEditar.performClick();
+                        break;
+
+                    case toolsID.CHANGE_ESCALE:
+                        tvNenhumaFerramenta.setVisibility(View.GONE);
+
+                        tvToolInfo.setText(R.string.instrucoes_escala);
+                        tvToolInfo.setVisibility(View.VISIBLE);
+
+                        tvContextInfo.setText(R.string.selecione_objeto);
+                        tvContextInfo.setVisibility(View.VISIBLE);
+
+                        ctTranslacao.setVisibility(View.GONE);
+                        // TODO: 1/27/20 add restante
+
+                        ctMudancaEscala.setVisibility(View.VISIBLE);
 
                         btnAbaEditar.performClick();
                         break;
@@ -365,22 +387,31 @@ public class MainActivity extends AppCompatActivity implements AdapterMenu.MenuF
             Point tap = new Point(x,y);
 
             for (Drawing d : drawingMap.values()) {
-                if (d.getTipo() == CADConstants.drawingTypes.RECTANGLE) {
 
-                    Point start = d.getPoints().get(0);
-                    Point stop = d.getPoints().get(1);
+                switch (d.getTipo()) {
 
-                    if (tap.x > start.x && tap.x < stop.x && tap.y > start.y && tap.y < stop.y) {
-                        if (objetosSelecionados.contains(d.getId())) objetosSelecionados.remove(d.getId());
-                        else objetosSelecionados.add(d.getId());
-                    }
+                    case drawingTypes.RECTANGLE_STROKE:
+                    case drawingTypes.RECTANGLE:
 
+                        Point start = d.getPoints().get(0);
+                        Point stop = d.getPoints().get(1);
+
+                        if (tap.x > start.x && tap.x < stop.x && tap.y > start.y && tap.y < stop.y) {
+                            if (objetosSelecionados.contains(d.getId())) objetosSelecionados.remove(d.getId());
+                            else objetosSelecionados.add(d.getId());
+                        }
+
+                        break;
+
+                    default:
+                        break;
                 }
             }
 
             String idsSelecionados = "";
 
             switch (funcaoSelecionada) {
+
                 case toolsID.TRANSLATION:
 
                     if (!objetosSelecionados.isEmpty()) {
@@ -388,6 +419,17 @@ public class MainActivity extends AppCompatActivity implements AdapterMenu.MenuF
                         tvIdsSelecionadosTranslacao.setText(idsSelecionados);
                     } else {
                         tvIdsSelecionadosTranslacao.setText(R.string.sem_objetos_selecionados);
+                    }
+
+                    break;
+
+                case toolsID.CHANGE_ESCALE:
+
+                    if (!objetosSelecionados.isEmpty()) {
+                        for (Long id : objetosSelecionados) idsSelecionados += "#" + id + " ";
+                        tvIdsSelecionadosEscala.setText(idsSelecionados);
+                    } else {
+                        tvIdsSelecionadosEscala.setText(R.string.sem_objetos_selecionados);
                     }
 
                     break;
@@ -468,11 +510,13 @@ public class MainActivity extends AppCompatActivity implements AdapterMenu.MenuF
     private void resetaFuncaoEdicao() {
         tvNenhumaFerramenta.setVisibility(View.VISIBLE);
         ctTranslacao.setVisibility(View.GONE);
+        ctMudancaEscala.setVisibility(View.GONE);
         // TODO: 1/26/20 adicionar o resto dos containers de edição aqui
     }
 
     private void clear() {
         drawingMap.clear();
+        objetosSelecionados.clear();
         canvas.clearCanvas();
     }
 
@@ -488,9 +532,8 @@ public class MainActivity extends AppCompatActivity implements AdapterMenu.MenuF
                 Drawing d = drawingMap.get(id);
 
                 switch (d.getTipo()) {
-                    case drawingTypes.RECTANGLE:
                     case drawingTypes.RECTANGLE_STROKE:
-
+                    case drawingTypes.RECTANGLE:
                         Point start = d.getPoints().get(0);
                         Point stop = d.getPoints().get(1);
 
@@ -518,7 +561,7 @@ public class MainActivity extends AppCompatActivity implements AdapterMenu.MenuF
         }
 
         if (success) draw();
-        else Toaster.longToast("operação não realizada: nenhum objeto selecionado", this);
+        else Toaster.longToast("operação de translação não realizada: nenhum objeto selecionado", this);
     }
 
     @OnClick(R.id.btn_esquerda)
@@ -539,6 +582,80 @@ public class MainActivity extends AppCompatActivity implements AdapterMenu.MenuF
     @OnClick(R.id.btn_baixo)
     void transladarBaixo() {
         translateDrawingsBy(0f,offsetTranslacao);
+    }
+
+    private void changeEscale(float e) {
+        boolean success = false;
+
+        for (Long id : objetosSelecionados) {
+            if (drawingMap.containsKey(id)) {
+                Drawing d = drawingMap.get(id);
+
+                switch (d.getTipo()) {
+                    case drawingTypes.RECTANGLE_STROKE:
+                    case drawingTypes.RECTANGLE:
+
+                        Point start = d.getPoints().get(0);
+                        Point stop = d.getPoints().get(1);
+
+                        float xDistance = (stop.x - start.x) * (e-1f);
+                        float yDistance = (stop.y - start.y) * (e-1f);
+
+                        start.y -= yDistance/2f;
+                        start.x -= xDistance/2f;
+
+                        stop.x += xDistance/2f;
+                        stop.y += yDistance/2f;
+
+                        d.clearPoints();
+                        d.addPoint(start);
+                        d.addPoint(stop);
+
+                        ((Rectangle)d).UpdateRectangle(start.x, start.y, stop.x, stop.y);
+                        drawingMap.put(id,d);
+                        success = true;
+
+                        break;
+
+                    default:
+                        break;
+                }
+
+            }
+        }
+
+        if (success) draw();
+        else Toaster.longToast("operação de mudança de escala não realizada: nenhum objeto selecionado", this);
+    }
+
+    @OnClick(R.id.btn_escala_025)
+    void mudarEscala025() {
+        changeEscale(0.25f);
+    }
+
+    @OnClick(R.id.btn_escala_05)
+    void mudarEscala05() {
+        changeEscale(0.5f);
+    }
+
+    @OnClick(R.id.btn_escala_075)
+    void mudarEscala075() {
+        changeEscale(0.75f);
+    }
+
+    @OnClick(R.id.btn_escala_125)
+    void mudarEscala125() {
+        changeEscale(1.25f);
+    }
+
+    @OnClick(R.id.btn_escala_150)
+    void mudarEscala150() {
+        changeEscale(1.5f);
+    }
+
+    @OnClick(R.id.btn_escala_2)
+    void mudarEscala2() {
+        changeEscale(2.0f);
     }
 
     @OnClick(R.id.btn_aba_criar)

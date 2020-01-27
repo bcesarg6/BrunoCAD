@@ -4,5 +4,7 @@
     <dimen name="btn_ferramenta_width">80dp</dimen>
     <dimen name="btn_ferramenta_icone_w">50dp</dimen>
     <dimen name="btn_ferramenta_icone_h">50dp</dimen>
+    <dimen name="btn_escala_w">60dp</dimen>
+    <dimen name="btn_escala_h">40dp</dimen>
 
 </resources>

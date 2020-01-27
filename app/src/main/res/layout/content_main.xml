@@ -175,6 +175,7 @@
 
                 <include layout="@layout/layout_ferramenta_translacao" />
 
+                <include layout="@layout/layout_mudanca_escala" />
 
             </LinearLayout>
 

@@ -11,6 +11,7 @@
     <string name="instrucoes_retangulo">criar retângulo</string>
     <string name="instrucoes_circulo">criar círculo</string>
     <string name="instrucoes_translacao">transladar objetos</string>
+    <string name="instrucoes_escala">alterar a escala de objetos</string>
 
     <string name="selecione_objeto">toque nos objetos no canvas</string>
     <string name="toque_1_ponto">toque em 1 ponto no canvas</string>
@@ -23,4 +24,5 @@
     <string name="ciruclo_criada">círculo desenhado</string>
     <string name="nenhuma_ferramenta_selecionada">Nenhuma ferramenta de edição selecionada\n\nSelecione a ferramenta no menu de ferramentas</string>
     <string name="sem_objetos_selecionados">nenhum objeto selecionado</string>
+    <string name="titulo_translacao">Translação</string>
 </resources>
