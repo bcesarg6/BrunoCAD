@@ -29,7 +29,7 @@ public class Drawing {
     void configPaint(boolean isAntiAlias, boolean isFill, boolean isStroke) {
         paint = new Paint();
         paint.setColor(color);
-        paint.setStrokeWidth(9f);
+        paint.setStrokeWidth(6f);
 
         if (isAntiAlias) paint.setFlags(Paint.ANTI_ALIAS_FLAG);
 

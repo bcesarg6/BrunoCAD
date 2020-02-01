@@ -440,6 +440,28 @@ public class MainActivity extends AppCompatActivity implements AdapterMenu.MenuF
 
                         break;
 
+                    case drawingTypes.LINE:
+
+//                        Não consegui fazer isso aqui funcionar :(
+
+//                        Path line = canvas.getLinePath(d.getId());
+//
+//                        if (line != null) {
+//
+//                            Path tempPath = new Path(); // Create temp Path
+//                            tempPath.moveTo(tap.x, tap.y); // Move cursor to point
+//                            RectF rectangle = new RectF(tap.x-1, tap.y-1, tap.x+1, tap.y+1); // create rectangle with size 2xp
+//                            tempPath.addRect(rectangle, Path.Direction.CW); // add rect to temp path
+//                            tempPath.op(line, Path.Op.UNION); // get difference with our PathToCheck
+//
+//                            if (tempPath.isEmpty()) {
+//                                if (objetosSelecionados.contains(d.getId())) objetosSelecionados.remove(d.getId());
+//                                else objetosSelecionados.add(d.getId());
+//                            }
+//                        }
+
+                        break;
+
                     case drawingTypes.TRIANGLE_STROKE:
                     case drawingTypes.TRIANGLE:
 

@@ -26,6 +26,7 @@ public class CADCanvas extends View {
     private tapListener listener = null;
     List<Drawing> drawings = new ArrayList<>();
     Map<Long, Region> regionMap = new HashMap<>();
+//    Map<Long, Path> lineMap = new HashMap<>();
 
     public CADCanvas(Context context) {
         super(context);
@@ -48,6 +49,7 @@ public class CADCanvas extends View {
     public void clearCanvas() {
         drawings.clear();
         regionMap.clear();
+//        lineMap.clear();
         invalidate();
     }
 
@@ -167,15 +169,53 @@ public class CADCanvas extends View {
     private void drawLine(Canvas canvas, Drawing d) {
         float startX = d.getValues().get(0);
         float startY = d.getValues().get(1);
+
         float stopX = d.getValues().get(2);
         float stopY = d.getValues().get(3);
 
-        canvas.drawLine(startX, startY, stopX, stopY, d.getPaint());
+        Path path = new Path();
+
+        path.setFillType(Path.FillType.EVEN_ODD);
+        path.moveTo(startX, startY);
+        path.lineTo(stopX, stopY);
+        path.close();
+
+        Matrix scaleMatrix = new Matrix();
+
+        RectF bounds = new RectF();
+        path.computeBounds(bounds, true);
+
+        scaleMatrix.setScale(d.getScale(), d.getScale(), bounds.centerX(), bounds.centerY());
+        path.transform(scaleMatrix);
+
+        if (d.getAngle() != 0f) {
+
+            canvas.save();
+            canvas.rotate(d.getAngle(), bounds.centerX(), bounds.centerY());
+
+//            lineMap.put(d.getId(), path);
+
+            canvas.drawPath(path, d.getPaint());
+
+            canvas.restore();
+
+        } else {
+
+//            lineMap.put(d.getId(), path);
+
+            canvas.drawPath(path, d.getPaint());
+        }
+
+//        canvas.drawLine(startX, startY, stopX, stopY, d.getPaint());
     }
 
     public Region getDrawingRegion(Long id) {
         return regionMap.containsKey(id) ? regionMap.get(id) : null;
     }
+
+//    public Path getLinePath(Long id) {
+//        return  lineMap.containsKey(id) ? lineMap.get(id) : null;
+//    }
 
     public void setListener(tapListener listener) {
         this.listener = listener;
