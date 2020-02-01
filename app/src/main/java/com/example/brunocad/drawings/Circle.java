@@ -25,8 +25,31 @@ public class Circle extends Drawing {
         this.radius = radius;
     }
 
+    public void updateCircle(float centerX, float centerY) {
+        List<Float> values = new ArrayList<>();
+
+        values.add(centerX);
+        values.add(centerY);
+        values.add(radius);
+
+        setValues(values);
+    }
+
     public float getRadius() {
         return radius;
+    }
+
+    public void scaleCircle(float scale) {
+        radius *= scale;
+
+        List<Float> newValues = new ArrayList<>();
+        List<Float> oldValues = getValues();
+
+        newValues.add(oldValues.get(0));
+        newValues.add(oldValues.get(1));
+        newValues.add(radius);
+
+        setValues(newValues);
     }
 
     @Override

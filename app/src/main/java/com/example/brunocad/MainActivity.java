@@ -454,6 +454,20 @@ public class MainActivity extends AppCompatActivity implements AdapterMenu.MenuF
 
                         break;
 
+                    case drawingTypes.CIRCLE_STROKE:
+                    case drawingTypes.CIRCLE:
+
+                        Point center = d.getPoints().get(0);
+
+                        double distance = Math.sqrt(Math.pow(tap.x - center.x, 2) + Math.pow(tap.y - center.y, 2));
+
+                        if (distance < ((Circle)d).getRadius()) {
+                            if (objetosSelecionados.contains(d.getId())) objetosSelecionados.remove(d.getId());
+                            else objetosSelecionados.add(d.getId());
+                        }
+
+                        break;
+
                     default:
                         break;
                 }
@@ -549,6 +563,7 @@ public class MainActivity extends AppCompatActivity implements AdapterMenu.MenuF
         tvNenhumaFerramenta.setVisibility(View.VISIBLE);
         ctTranslacao.setVisibility(View.GONE);
         ctMudancaEscala.setVisibility(View.GONE);
+        ctRotacao.setVisibility(View.GONE);
         // TODO: 1/26/20 adicionar o resto dos containers de edição aqui
     }
 
@@ -625,6 +640,24 @@ public class MainActivity extends AppCompatActivity implements AdapterMenu.MenuF
 
                         break;
 
+                    case drawingTypes.CIRCLE_STROKE:
+                    case drawingTypes.CIRCLE:
+
+                        Point center = d.getPoints().get(0);
+
+                        center.x += x;
+                        center.y += y;
+
+                        d.clearPoints();
+                        d.addPoint(center);
+
+                        ((Circle)d).updateCircle(center.x, center.y);
+
+                        drawingMap.put(id, d);
+                        success = true;
+
+                        break;
+
                     default:
                         break;
                 }
@@ -660,7 +693,7 @@ public class MainActivity extends AppCompatActivity implements AdapterMenu.MenuF
      * Mudança de escala
      * @param e fator da escala
      */
-    private void changeEscale(float e) {
+    private void changeScale(float e) {
         boolean success = false;
 
         for (Long id : objetosSelecionados) {
@@ -679,23 +712,31 @@ public class MainActivity extends AppCompatActivity implements AdapterMenu.MenuF
                         Point start = d.getPoints().get(0);
                         Point stop = d.getPoints().get(1);
 
-                        float xDistance = (stop.x - start.x) * (e-1f);
-                        float yDistance = (stop.y - start.y) * (e-1f);
+                        float xDistance = (stop.x - start.x) * (e - 1f);
+                        float yDistance = (stop.y - start.y) * (e - 1f);
 
-                        start.y -= yDistance/2f;
-                        start.x -= xDistance/2f;
+                        start.y -= yDistance / 2f;
+                        start.x -= xDistance / 2f;
 
-                        stop.x += xDistance/2f;
-                        stop.y += yDistance/2f;
+                        stop.x += xDistance / 2f;
+                        stop.y += yDistance / 2f;
 
                         d.clearPoints();
                         d.addPoint(start);
                         d.addPoint(stop);
 
                         ((Rectangle)d).UpdateRectangle(start.x, start.y, stop.x, stop.y);
-                        drawingMap.put(id,d);
+                        drawingMap.put(id, d);
                         success = true;
 
+                        break;
+
+                    case drawingTypes.CIRCLE_STROKE:
+                    case drawingTypes.CIRCLE:
+
+                        ((Circle)d).scaleCircle(e);
+                        drawingMap.put(id, d);
+                        success = true;
                         break;
 
                     default:
@@ -711,32 +752,32 @@ public class MainActivity extends AppCompatActivity implements AdapterMenu.MenuF
 
     @OnClick(R.id.btn_escala_025)
     void mudarEscala025() {
-        changeEscale(0.25f);
+        changeScale(0.25f);
     }
 
     @OnClick(R.id.btn_escala_05)
     void mudarEscala05() {
-        changeEscale(0.5f);
+        changeScale(0.5f);
     }
 
     @OnClick(R.id.btn_escala_075)
     void mudarEscala075() {
-        changeEscale(0.75f);
+        changeScale(0.75f);
     }
 
     @OnClick(R.id.btn_escala_125)
     void mudarEscala125() {
-        changeEscale(1.25f);
+        changeScale(1.25f);
     }
 
     @OnClick(R.id.btn_escala_150)
     void mudarEscala150() {
-        changeEscale(1.5f);
+        changeScale(1.5f);
     }
 
     @OnClick(R.id.btn_escala_2)
     void mudarEscala2() {
-        changeEscale(2.0f);
+        changeScale(2.0f);
     }
 
     private void RotateDrawings(float angle) {
