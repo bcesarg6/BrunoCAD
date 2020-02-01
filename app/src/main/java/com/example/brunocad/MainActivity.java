@@ -667,6 +667,11 @@ public class MainActivity extends AppCompatActivity implements AdapterMenu.MenuF
             if (drawingMap.containsKey(id)) {
                 Drawing d = drawingMap.get(id);
 
+                if (d != null) {
+                    d.applyScale(e);
+                    success = true;
+                }
+
                 switch (d.getType()) {
                     case drawingTypes.RECTANGLE_STROKE:
                     case drawingTypes.RECTANGLE:
@@ -741,9 +746,10 @@ public class MainActivity extends AppCompatActivity implements AdapterMenu.MenuF
             if (drawingMap.containsKey(id)) {
                 Drawing d = drawingMap.get(id);
 
-                if (d != null) d.addAngle(angle);
-
-                success = true;
+                if (d != null)  {
+                    d.addAngle(angle);
+                    success = true;
+                }
             }
         }
 

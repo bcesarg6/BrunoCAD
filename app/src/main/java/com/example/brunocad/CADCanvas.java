@@ -2,6 +2,7 @@ package com.example.brunocad;
 
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.Matrix;
 import android.graphics.Path;
 import android.graphics.RectF;
 import android.graphics.Region;
@@ -126,10 +127,15 @@ public class CADCanvas extends View {
         path.lineTo(p3x, p3y);
         path.close();
 
-        if (d.getAngle() != 0f) {
+        Matrix scaleMatrix = new Matrix();
 
-            RectF bounds = new RectF();
-            path.computeBounds(bounds, false);
+        RectF bounds = new RectF();
+        path.computeBounds(bounds, true);
+
+        scaleMatrix.setScale(d.getScale(), d.getScale(), bounds.centerX(), bounds.centerY());
+        path.transform(scaleMatrix);
+
+        if (d.getAngle() != 0f) {
 
             canvas.save();
             canvas.rotate(d.getAngle(), bounds.centerX(), bounds.centerY());

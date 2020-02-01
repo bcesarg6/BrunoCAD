@@ -12,6 +12,7 @@ public class Drawing {
     private int type;
     private int color;
     private float angle;
+    private float scale;
 
     private List<Point> points = new ArrayList<>();
     private List<Float> values = null;
@@ -21,7 +22,8 @@ public class Drawing {
         this.id = id;
         this.type = type;
         this.color = color;
-        this.angle = 0;
+        this.angle = 0f;
+        this.scale = 1f;
     }
 
     void configPaint(boolean isAntiAlias, boolean isFill, boolean isStroke) {
@@ -89,5 +91,13 @@ public class Drawing {
 
     public void addAngle(float angle) {
         this.angle += angle;
+    }
+
+    public float getScale() {
+        return scale;
+    }
+
+    public void applyScale(float scale) {
+        this.scale *= scale;
     }
 }
