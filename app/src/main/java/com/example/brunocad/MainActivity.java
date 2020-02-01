@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.Point;
+import android.graphics.Region;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.View;
@@ -439,6 +440,20 @@ public class MainActivity extends AppCompatActivity implements AdapterMenu.MenuF
 
                         break;
 
+                    case drawingTypes.TRIANGLE_STROKE:
+                    case drawingTypes.TRIANGLE:
+
+                        Region r = canvas.getDrawingRegion(d.getId());
+
+                        if (r != null) {
+                            if (r.contains(tap.x, tap.y)) {
+                                if (objetosSelecionados.contains(d.getId())) objetosSelecionados.remove(d.getId());
+                                else objetosSelecionados.add(d.getId());
+                            }
+                        }
+
+                        break;
+
                     default:
                         break;
                 }
@@ -576,6 +591,35 @@ public class MainActivity extends AppCompatActivity implements AdapterMenu.MenuF
                         d.addPoint(stop);
 
                         ((Rectangle)d).UpdateRectangle(start.x, start.y, stop.x, stop.y);
+                        drawingMap.put(id,d);
+                        success = true;
+
+                        break;
+
+                    case drawingTypes.TRIANGLE_STROKE:
+                    case drawingTypes.TRIANGLE:
+                        Point p1 = d.getPoints().get(0);
+                        Point p2 = d.getPoints().get(1);
+                        Point p3 = d.getPoints().get(2);
+
+                        p1.x += x;
+                        p1.y += y;
+
+                        p2.x += x;
+                        p2.y += y;
+
+                        p3.x += x;
+                        p3.y += y;
+
+                        d.clearPoints();
+                        d.addPoint(p1);
+                        d.addPoint(p2);
+                        d.addPoint(p3);
+
+                        ((Triangle)d).updateTriangle(p1.x, p1.y,
+                                                     p2.x, p2.y,
+                                                     p3.x, p3.y);
+
                         drawingMap.put(id,d);
                         success = true;
 

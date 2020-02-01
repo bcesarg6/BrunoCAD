@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Path;
 import android.graphics.RectF;
+import android.graphics.Region;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
@@ -13,7 +14,9 @@ import androidx.annotation.Nullable;
 import com.example.brunocad.drawings.Drawing;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static com.example.brunocad.utils.CADConstants.drawingTypes;
 
@@ -21,6 +24,7 @@ public class CADCanvas extends View {
 
     private tapListener listener = null;
     List<Drawing> drawings = new ArrayList<>();
+    Map<Long, Region> regionMap = new HashMap<>();
 
     public CADCanvas(Context context) {
         super(context);
@@ -42,6 +46,7 @@ public class CADCanvas extends View {
 
     public void clearCanvas() {
         drawings.clear();
+        regionMap.clear();
         invalidate();
     }
 
@@ -121,7 +126,36 @@ public class CADCanvas extends View {
         path.lineTo(p3x, p3y);
         path.close();
 
-        canvas.drawPath(path, d.getPaint());
+        if (d.getAngle() != 0f) {
+
+            RectF bounds = new RectF();
+            path.computeBounds(bounds, false);
+
+            canvas.save();
+            canvas.rotate(d.getAngle(), bounds.centerX(), bounds.centerY());
+
+            Region clip = new Region(0, 0, canvas.getWidth(), canvas.getHeight());
+
+            Region r = new Region();
+            r.setPath(path, clip);
+
+            regionMap.put(d.getId(), r);
+
+            canvas.drawPath(path, d.getPaint());
+
+            canvas.restore();
+
+        } else {
+
+            Region clip = new Region(0, 0, canvas.getWidth(), canvas.getHeight());
+
+            Region r = new Region();
+            r.setPath(path, clip);
+
+            regionMap.put(d.getId(), r);
+
+            canvas.drawPath(path, d.getPaint());
+        }
     }
 
     private void drawLine(Canvas canvas, Drawing d) {
@@ -131,6 +165,10 @@ public class CADCanvas extends View {
         float stopY = d.getValues().get(3);
 
         canvas.drawLine(startX, startY, stopX, stopY, d.getPaint());
+    }
+
+    public Region getDrawingRegion(Long id) {
+        return regionMap.containsKey(id) ? regionMap.get(id) : null;
     }
 
     public void setListener(tapListener listener) {
