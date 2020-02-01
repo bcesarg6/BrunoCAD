@@ -177,6 +177,8 @@
 
                 <include layout="@layout/layout_mudanca_escala" />
 
+                <include layout="@layout/layout_ferramenta_rotacao" />
+
             </LinearLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>

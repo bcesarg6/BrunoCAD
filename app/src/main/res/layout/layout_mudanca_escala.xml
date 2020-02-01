@@ -5,7 +5,7 @@
     android:id="@+id/ct_mudanca_escala"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:visibility="visible"
+    android:visibility="gone"
     tools:showIn="@layout/content_main">
 
     <TextView
@@ -13,7 +13,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="2dp"
-        android:text="Mudança de escala"
+        android:text="@string/titulo_escala"
         android:textColor="@color/colorPrimaryDark"
         android:textSize="16sp"
         android:textStyle="bold"
@@ -24,9 +24,9 @@
         android:id="@+id/tv_titulo_ids_escala"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="15dp"
+        android:layout_marginLeft="10dp"
         android:layout_marginTop="5dp"
-        android:text="objetos selecionados:"
+        android:text="@string/objetos_selecionados"
         android:textSize="11sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tv_titulo_escala" />

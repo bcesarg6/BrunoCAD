@@ -9,22 +9,24 @@ import java.util.List;
 public class Drawing {
 
     private long id;
-    private int tipo;
-    private int cor;
+    private int type;
+    private int color;
+    private float angle;
 
     private List<Point> points = new ArrayList<>();
     private List<Float> values = null;
     private Paint paint = null;
 
-    public Drawing(long id, int tipo, int cor) {
+    Drawing(long id, int type, int color) {
         this.id = id;
-        this.tipo = tipo;
-        this.cor = cor;
+        this.type = type;
+        this.color = color;
+        this.angle = 0;
     }
 
-    public void configPaint(boolean isAntiAlias, boolean isFill, boolean isStroke) {
+    void configPaint(boolean isAntiAlias, boolean isFill, boolean isStroke) {
         paint = new Paint();
-        paint.setColor(cor);
+        paint.setColor(color);
         paint.setStrokeWidth(9f);
 
         if (isAntiAlias) paint.setFlags(Paint.ANTI_ALIAS_FLAG);
@@ -60,12 +62,12 @@ public class Drawing {
         return paint;
     }
 
-    public void setCor(int cor) {
-        this.paint.setColor(cor);
+    public void setColor(int color) {
+        this.paint.setColor(color);
     }
 
-    public int getTipo() {
-        return tipo;
+    public int getType() {
+        return type;
     }
 
     public void addPoint(Point point) {
@@ -78,5 +80,14 @@ public class Drawing {
 
     public void clearPoints() {
         points.clear();
+    }
+
+    public float getAngle() {
+        angle = angle%360f;
+        return angle;
+    }
+
+    public void addAngle(float angle) {
+        this.angle += angle;
     }
 }

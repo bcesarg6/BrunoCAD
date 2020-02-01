@@ -49,7 +49,7 @@ public class CADCanvas extends View {
     protected void onDraw(Canvas canvas) {
         for (Drawing d: drawings) {
 
-            switch (d.getTipo()) {
+            switch (d.getType()) {
 
                 case drawingTypes.LINE:
                     drawLine(canvas, d);
@@ -90,7 +90,18 @@ public class CADCanvas extends View {
         float right = d.getValues().get(2);
         float bottom = d.getValues().get(3);
 
-        canvas.drawRect(new RectF(left,top,right,bottom),d.getPaint());
+        RectF rect = new RectF(left,top,right,bottom);
+
+        if (d.getAngle() != 0f) {
+
+            canvas.save();
+            canvas.rotate(d.getAngle(), rect.centerX(), rect.centerY());
+
+            canvas.drawRect(rect, d.getPaint());
+
+            canvas.restore();
+
+        } else canvas.drawRect(rect, d.getPaint());
     }
 
     private void drawTriangle(Canvas canvas, Drawing d) {

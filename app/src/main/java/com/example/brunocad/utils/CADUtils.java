@@ -86,4 +86,17 @@ public class CADUtils {
 
         return offsets;
     }
+
+    public static List<Integer> getOffsetRotacao() {
+        List<Integer> offsets = new ArrayList<>();
+
+        offsets.add(30);
+        offsets.add(45);
+        offsets.add(60);
+        offsets.add(90);
+        offsets.add(180);
+        offsets.add(270);
+
+        return offsets;
+    }
 }

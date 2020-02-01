@@ -70,6 +70,10 @@ public class MainActivity extends AppCompatActivity implements AdapterMenu.MenuF
     @BindView(R.id.ct_mudanca_escala) ConstraintLayout ctMudancaEscala;
     @BindView(R.id.tv_ids_selecionados_escala) TextView tvIdsSelecionadosEscala;
 
+    @BindView(R.id.ct_rotacao) ConstraintLayout ctRotacao;
+    @BindView(R.id.tv_ids_selecionados_rotacao) TextView tvIdsSelecionadosRotacao;
+    @BindView(R.id.spinner_valor_rotacao) MaterialSpinner spinnerValorRotacao;
+
     private int abaSelecionada = TabsID.CREATE;
 
     private AdapterMenu adapterMenuCriar;
@@ -78,7 +82,9 @@ public class MainActivity extends AppCompatActivity implements AdapterMenu.MenuF
     private int funcaoSelecionada = toolsID.NONE;
 
     private List<Long> objetosSelecionados = new ArrayList<>();
+
     private Integer offsetTranslacao = 10;
+    private Integer offsetRotacao = 30;
 
     Map<Long, Drawing> drawingMap = new HashMap<>();
     List<Point> coordinates = new ArrayList<>();
@@ -114,7 +120,20 @@ public class MainActivity extends AppCompatActivity implements AdapterMenu.MenuF
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-                offsetTranslacao = 0;
+                offsetTranslacao = 10;
+            }
+        });
+
+        spinnerValorRotacao.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, CADUtils.getOffsetRotacao()));
+        spinnerValorRotacao.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                offsetRotacao = CADUtils.getOffsetRotacao().get(position);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                offsetRotacao = 30;
             }
         });
     }
@@ -185,7 +204,7 @@ public class MainActivity extends AppCompatActivity implements AdapterMenu.MenuF
                         tvContextInfo.setVisibility(View.VISIBLE);
 
                         ctMudancaEscala.setVisibility(View.GONE);
-                        // TODO: 1/27/20 add restante
+                        ctRotacao.setVisibility(View.GONE);
 
                         ctTranslacao.setVisibility(View.VISIBLE);
 
@@ -202,9 +221,26 @@ public class MainActivity extends AppCompatActivity implements AdapterMenu.MenuF
                         tvContextInfo.setVisibility(View.VISIBLE);
 
                         ctTranslacao.setVisibility(View.GONE);
-                        // TODO: 1/27/20 add restante
+                        ctRotacao.setVisibility(View.GONE);
 
                         ctMudancaEscala.setVisibility(View.VISIBLE);
+
+                        btnAbaEditar.performClick();
+                        break;
+
+                    case toolsID.ROTATION:
+                        tvNenhumaFerramenta.setVisibility(View.GONE);
+
+                        tvToolInfo.setText(R.string.instrucoes_rotacao);
+                        tvToolInfo.setVisibility(View.VISIBLE);
+
+                        tvContextInfo.setText(R.string.selecione_objeto);
+                        tvContextInfo.setVisibility(View.VISIBLE);
+
+                        ctTranslacao.setVisibility(View.GONE);
+                        ctMudancaEscala.setVisibility(View.GONE);
+
+                        ctRotacao.setVisibility(View.VISIBLE);
 
                         btnAbaEditar.performClick();
                         break;
@@ -388,7 +424,7 @@ public class MainActivity extends AppCompatActivity implements AdapterMenu.MenuF
 
             for (Drawing d : drawingMap.values()) {
 
-                switch (d.getTipo()) {
+                switch (d.getType()) {
 
                     case drawingTypes.RECTANGLE_STROKE:
                     case drawingTypes.RECTANGLE:
@@ -410,32 +446,19 @@ public class MainActivity extends AppCompatActivity implements AdapterMenu.MenuF
 
             String idsSelecionados = "";
 
-            switch (funcaoSelecionada) {
+            if (!objetosSelecionados.isEmpty()) {
 
-                case toolsID.TRANSLATION:
+                for (Long id : objetosSelecionados) idsSelecionados += "#" + id + " ";
 
-                    if (!objetosSelecionados.isEmpty()) {
-                        for (Long id : objetosSelecionados) idsSelecionados += "#" + id + " ";
-                        tvIdsSelecionadosTranslacao.setText(idsSelecionados);
-                    } else {
-                        tvIdsSelecionadosTranslacao.setText(R.string.sem_objetos_selecionados);
-                    }
+                tvIdsSelecionadosTranslacao.setText(idsSelecionados);
+                tvIdsSelecionadosEscala.setText(idsSelecionados);
+                tvIdsSelecionadosRotacao.setText(idsSelecionados);
 
-                    break;
+            } else {
 
-                case toolsID.CHANGE_ESCALE:
-
-                    if (!objetosSelecionados.isEmpty()) {
-                        for (Long id : objetosSelecionados) idsSelecionados += "#" + id + " ";
-                        tvIdsSelecionadosEscala.setText(idsSelecionados);
-                    } else {
-                        tvIdsSelecionadosEscala.setText(R.string.sem_objetos_selecionados);
-                    }
-
-                    break;
-
-                default:
-                    break;
+                tvIdsSelecionadosTranslacao.setText(R.string.sem_objetos_selecionados);
+                tvIdsSelecionadosEscala.setText(R.string.sem_objetos_selecionados);
+                tvIdsSelecionadosRotacao.setText(R.string.sem_objetos_selecionados);
             }
         }
     }
@@ -524,6 +547,11 @@ public class MainActivity extends AppCompatActivity implements AdapterMenu.MenuF
         canvas.draw(new ArrayList<>(drawingMap.values()));
     }
 
+    /**
+     * Translação de objetos
+     * @param x offset horizontal
+     * @param y offset vertical
+     */
     private void translateDrawingsBy(float x, float y) {
         boolean success = false;
 
@@ -531,7 +559,7 @@ public class MainActivity extends AppCompatActivity implements AdapterMenu.MenuF
             if (drawingMap.containsKey(id)) {
                 Drawing d = drawingMap.get(id);
 
-                switch (d.getTipo()) {
+                switch (d.getType()) {
                     case drawingTypes.RECTANGLE_STROKE:
                     case drawingTypes.RECTANGLE:
                         Point start = d.getPoints().get(0);
@@ -584,6 +612,10 @@ public class MainActivity extends AppCompatActivity implements AdapterMenu.MenuF
         translateDrawingsBy(0f,offsetTranslacao);
     }
 
+    /**
+     * Mudança de escala
+     * @param e fator da escala
+     */
     private void changeEscale(float e) {
         boolean success = false;
 
@@ -591,7 +623,7 @@ public class MainActivity extends AppCompatActivity implements AdapterMenu.MenuF
             if (drawingMap.containsKey(id)) {
                 Drawing d = drawingMap.get(id);
 
-                switch (d.getTipo()) {
+                switch (d.getType()) {
                     case drawingTypes.RECTANGLE_STROKE:
                     case drawingTypes.RECTANGLE:
 
@@ -656,6 +688,33 @@ public class MainActivity extends AppCompatActivity implements AdapterMenu.MenuF
     @OnClick(R.id.btn_escala_2)
     void mudarEscala2() {
         changeEscale(2.0f);
+    }
+
+    private void RotateDrawings(float angle) {
+        boolean success = false;
+
+        for (Long id : objetosSelecionados) {
+            if (drawingMap.containsKey(id)) {
+                Drawing d = drawingMap.get(id);
+
+                if (d != null) d.addAngle(angle);
+
+                success = true;
+            }
+        }
+
+        if (success) draw();
+        else Toaster.longToast("operação de rotação não realizada: nenhum objeto selecionado", this);
+    }
+
+    @OnClick(R.id.btn_rot_l)
+    void RotateLeft() {
+        RotateDrawings(offsetRotacao * -1.0f);
+    }
+
+    @OnClick(R.id.btn_rot_r)
+    void RotateRight() {
+        RotateDrawings(offsetRotacao);
     }
 
     @OnClick(R.id.btn_aba_criar)

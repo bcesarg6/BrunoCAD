@@ -28,4 +28,9 @@ public class Circle extends Drawing {
     public float getRadius() {
         return radius;
     }
+
+    @Override
+    public float getAngle() {
+        return 0f;
+    }
 }

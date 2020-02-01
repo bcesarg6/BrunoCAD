@@ -2,27 +2,27 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/ct_translacao"
+    android:id="@+id/ct_rotacao"
     android:visibility="gone"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:showIn="@layout/content_main">
 
     <TextView
-        android:id="@+id/tv_titulo_translacao"
+        android:id="@+id/tv_titulo_rotacao"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="2dp"
-        android:text="@string/titulo_translacao"
+        android:text="@string/titulo_rotacao"
         android:textColor="@color/colorPrimaryDark"
         android:textSize="16sp"
         android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="@id/tv_titulo_ids_translacao"
-        app:layout_constraintEnd_toEndOf="@id/tv_titulo_ids_translacao"
+        app:layout_constraintStart_toStartOf="@id/tv_titulo_ids_rotacao"
+        app:layout_constraintEnd_toEndOf="@id/tv_titulo_ids_rotacao"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/tv_titulo_ids_translacao"
+        android:id="@+id/tv_titulo_ids_rotacao"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="10dp"
@@ -30,17 +30,17 @@
         android:text="@string/objetos_selecionados"
         android:textSize="11sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tv_titulo_translacao" />
+        app:layout_constraintTop_toBottomOf="@id/tv_titulo_rotacao" />
 
     <ScrollView
         android:layout_width="110dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="@id/tv_titulo_ids_translacao"
-        app:layout_constraintTop_toBottomOf="@id/tv_titulo_ids_translacao">
+        app:layout_constraintStart_toStartOf="@id/tv_titulo_ids_rotacao"
+        app:layout_constraintTop_toBottomOf="@id/tv_titulo_ids_rotacao">
 
         <TextView
-            android:id="@+id/tv_ids_selecionados_translacao"
+            android:id="@+id/tv_ids_selecionados_rotacao"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:paddingStart="5dp"
@@ -50,7 +50,7 @@
     </ScrollView>
 
     <LinearLayout
-        android:id="@+id/ll_valor_translacao"
+        android:id="@+id/ll_valor_rotacao"
         android:layout_width="105dp"
         android:layout_height="wrap_content"
         android:background="@drawable/bg_border_rounded"
@@ -60,19 +60,19 @@
         android:paddingTop="2dp"
         android:paddingBottom="2dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/ct_botoes_translacao"
-        app:layout_constraintStart_toEndOf="@id/tv_titulo_ids_translacao"
+        app:layout_constraintEnd_toStartOf="@id/btn_rot_l"
+        app:layout_constraintStart_toEndOf="@id/tv_titulo_ids_rotacao"
         app:layout_constraintTop_toTopOf="parent">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/mover_em"
+            android:text="@string/rotacionar_em"
             android:textAlignment="center"
             android:textSize="12sp" />
 
         <fr.ganfra.materialspinner.MaterialSpinner
-            android:id="@+id/spinner_valor_translacao"
+            android:id="@+id/spinner_valor_rotacao"
             android:layout_width="90dp"
             android:layout_height="wrap_content"
             android:textAlignment="textStart"
@@ -82,58 +82,52 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/pixels"
+            android:text="@string/graus"
             android:textAlignment="center"
             android:textSize="12sp" />
 
     </LinearLayout>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/ct_botoes_translacao"
+    <ImageButton
+        android:id="@+id/btn_rot_l"
+        android:layout_width="55dp"
+        android:layout_height="65dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginBottom="20dp"
+        android:src="@drawable/ic_rotate_left"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/btn_rot_r"
+        app:layout_constraintStart_toEndOf="@id/ll_valor_rotacao"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
+        android:text="esquerda"
+        android:textSize="13sp"
+        app:layout_constraintEnd_toEndOf="@id/btn_rot_l"
+        app:layout_constraintStart_toStartOf="@id/btn_rot_l"
+        app:layout_constraintTop_toBottomOf="@id/btn_rot_l" />
+
+    <ImageButton
+        android:id="@+id/btn_rot_r"
+        android:layout_width="55dp"
+        android:layout_height="65dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginBottom="20dp"
+        android:src="@drawable/ic_rotate_right"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/ll_valor_translacao"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintStart_toEndOf="@id/btn_rot_l"
+        app:layout_constraintTop_toTopOf="parent" />
 
-        <ImageButton
-            android:id="@+id/btn_cima"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_marginRight="32dp"
-            android:src="@drawable/ic_flecha_cima"
-            app:layout_constraintEnd_toEndOf="@id/btn_direita"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <ImageButton
-            android:id="@+id/btn_direita"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:src="@drawable/ic_flecha_direita"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <ImageButton
-            android:id="@+id/btn_baixo"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_marginRight="32dp"
-            android:src="@drawable/ic_flecha_baixo"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="@id/btn_direita" />
-
-        <ImageButton
-            android:id="@+id/btn_esquerda"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_marginRight="32dp"
-            android:src="@drawable/ic_flecha_esquerda"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="@id/btn_baixo"
-            app:layout_constraintTop_toTopOf="parent" />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="direita"
+        android:textSize="13sp"
+        app:layout_constraintEnd_toEndOf="@id/btn_rot_r"
+        app:layout_constraintStart_toStartOf="@id/btn_rot_r"
+        app:layout_constraintTop_toBottomOf="@id/btn_rot_r" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
