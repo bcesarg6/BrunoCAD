@@ -32,6 +32,8 @@ public class CADConstants {
 
         public static final int CIRCLE_STROKE = 11;
         public static final int CIRCLE = 12;
+
+        public static final int UNDO = 13;
     }
 
     public static class drawingTypes {

@@ -37,6 +37,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Stack;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -89,6 +90,8 @@ public class MainActivity extends AppCompatActivity implements AdapterMenu.MenuF
 
     Map<Long, Drawing> drawingMap = new HashMap<>();
     List<Point> coordinates = new ArrayList<>();
+
+    Stack<Map<Long, Drawing>> drawingMapStack = new Stack();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -144,6 +147,7 @@ public class MainActivity extends AppCompatActivity implements AdapterMenu.MenuF
 
         if (botaoClicado.getId() == toolsID.CLEAR) onClearClicked();
         else if (botaoClicado.getId() == toolsID.HELP) abrirDialogAjuda();
+        else if (botaoClicado.getId() == toolsID.UNDO) undo();
         else {
 
             if (funcaoSelecionada == botaoClicado.getId()) cancelOperation();
@@ -563,6 +567,7 @@ public class MainActivity extends AppCompatActivity implements AdapterMenu.MenuF
     }
 
     private void addDrawing(Drawing drawing) {
+        drawingMapStack.push(clone(drawingMap));
         drawingMap.put(drawing.getId(), drawing);
     }
 
@@ -570,7 +575,7 @@ public class MainActivity extends AppCompatActivity implements AdapterMenu.MenuF
      * limpa o canvas e a lista de drawings
      */
     private void onClearClicked() {
-        clear();
+        clear(false);
         Toaster.shortToast("canvas limpo", this);
 
         resetTools();
@@ -586,10 +591,11 @@ public class MainActivity extends AppCompatActivity implements AdapterMenu.MenuF
         ctTranslacao.setVisibility(View.GONE);
         ctMudancaEscala.setVisibility(View.GONE);
         ctRotacao.setVisibility(View.GONE);
-        // TODO: 1/26/20 adicionar o resto dos containers de edição aqui
     }
 
-    private void clear() {
+    private void clear(boolean isUndo) {
+        if (!isUndo) drawingMapStack.push(clone(drawingMap));
+
         drawingMap.clear();
         objetosSelecionados.clear();
         canvas.clearCanvas();
@@ -599,6 +605,33 @@ public class MainActivity extends AppCompatActivity implements AdapterMenu.MenuF
         canvas.draw(new ArrayList<>(drawingMap.values()));
     }
 
+    private void undo() {
+        if (drawingMapStack.empty()) {
+            Toaster.shortToast("nada para voltar", this);
+            return;
+        }
+
+        drawingMap = clone(drawingMapStack.pop());
+
+        if (drawingMap.isEmpty()) clear(true);
+        else draw();
+    }
+
+
+    public Map<Long,Drawing> clone(@org.jetbrains.annotations.NotNull Map<Long,Drawing> original) {
+        Map<Long,Drawing> copy = new HashMap<>();
+
+        for (Map.Entry<Long,Drawing> entry: original.entrySet()) {
+            try {
+                copy.put(entry.getKey(), (Drawing) entry.getValue().clone());
+            } catch (CloneNotSupportedException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return copy;
+    }
+
     /**
      * Translação de objetos
      * @param x offset horizontal
@@ -606,6 +639,8 @@ public class MainActivity extends AppCompatActivity implements AdapterMenu.MenuF
      */
     private void translateDrawingsBy(float x, float y) {
         boolean success = false;
+
+        drawingMapStack.push(clone(drawingMap));
 
         for (Long id : objetosSelecionados) {
             if (drawingMap.containsKey(id)) {
@@ -688,7 +723,10 @@ public class MainActivity extends AppCompatActivity implements AdapterMenu.MenuF
         }
 
         if (success) draw();
-        else Toaster.longToast("operação de translação não realizada: nenhum objeto selecionado", this);
+        else {
+            Toaster.longToast("operação de translação não realizada: nenhum objeto selecionado", this);
+            drawingMapStack.pop();
+        }
     }
 
     @OnClick(R.id.btn_esquerda)
@@ -717,6 +755,7 @@ public class MainActivity extends AppCompatActivity implements AdapterMenu.MenuF
      */
     private void changeScale(float e) {
         boolean success = false;
+        drawingMapStack.push(clone(drawingMap));
 
         for (Long id : objetosSelecionados) {
             if (drawingMap.containsKey(id)) {
@@ -769,7 +808,10 @@ public class MainActivity extends AppCompatActivity implements AdapterMenu.MenuF
         }
 
         if (success) draw();
-        else Toaster.longToast("operação de mudança de escala não realizada: nenhum objeto selecionado", this);
+        else  {
+            Toaster.longToast("operação de mudança de escala não realizada: nenhum objeto selecionado", this);
+            drawingMapStack.pop();
+        }
     }
 
     @OnClick(R.id.btn_escala_025)
@@ -804,6 +846,7 @@ public class MainActivity extends AppCompatActivity implements AdapterMenu.MenuF
 
     private void RotateDrawings(float angle) {
         boolean success = false;
+        drawingMapStack.push(clone(drawingMap));
 
         for (Long id : objetosSelecionados) {
             if (drawingMap.containsKey(id)) {
@@ -817,7 +860,10 @@ public class MainActivity extends AppCompatActivity implements AdapterMenu.MenuF
         }
 
         if (success) draw();
-        else Toaster.longToast("operação de rotação não realizada: nenhum objeto selecionado", this);
+        else  {
+            Toaster.longToast("operação de rotação não realizada: nenhum objeto selecionado", this);
+            drawingMapStack.pop();
+        }
     }
 
     @OnClick(R.id.btn_rot_l)

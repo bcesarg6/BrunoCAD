@@ -3,10 +3,12 @@ package com.example.brunocad.drawings;
 import android.graphics.Paint;
 import android.graphics.Point;
 
+import androidx.annotation.NonNull;
+
 import java.util.ArrayList;
 import java.util.List;
 
-public class Drawing {
+public class Drawing implements Cloneable {
 
     private long id;
     private int type;
@@ -99,5 +101,11 @@ public class Drawing {
 
     public void applyScale(float scale) {
         this.scale *= scale;
+    }
+
+    @NonNull
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        return super.clone();
     }
 }
