@@ -61,6 +61,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toTopOf="@id/card_menu"
+        android:background="@color/branco"
         android:layout_width="match_parent"
         android:layout_height="0dp" />
 

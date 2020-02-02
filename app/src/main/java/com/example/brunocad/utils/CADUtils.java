@@ -72,7 +72,7 @@ public class CADUtils {
         ferramentasEditar.add(new BotaoFerramenta(toolsID.TRANSLATION, "Translação", context.getDrawable(R.drawable.ic_translacao)));
         ferramentasEditar.add(new BotaoFerramenta(toolsID.ROTATION, "Rotação", context.getDrawable(R.drawable.ic_rotacao)));
         ferramentasEditar.add(new BotaoFerramenta(toolsID.CHANGE_ESCALE, "Mudança de Escala", context.getDrawable(R.drawable.ic_escala)));
-        ferramentasEditar.add(new BotaoFerramenta(toolsID.ZOOM_EXTEND, "Zoom Extend", context.getDrawable(R.drawable.ic_zoom_out)));
+        ferramentasEditar.add(new BotaoFerramenta(toolsID.EXPORT_CANVAS, "Exportar Canvas", context.getDrawable(R.drawable.ic_exportar)));
 
         return ferramentasEditar;
     }

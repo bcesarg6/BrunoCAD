@@ -36,7 +36,7 @@
     <string name="pixels">pixels</string>
     <string name="mover_em">mover em:</string>
 
-    <string name="sobre">O BrunoCAD é um sistema de Computer Assisted Drawing (CAD) desenvolvido para a disciplina de Computação Gráfica do curso de Ciência da Computação da Universidade Estadual de Maringá. Este é um software livre, o código da aplicação se encontra disponível em https://github.com/bcesarg6/BrunoCAD :)</string>
+    <string name="sobre">O BrunoCAD é um sistema de computer-aided design (CAD) desenvolvido para a disciplina de Computação Gráfica do curso de Ciência da Computação da Universidade Estadual de Maringá. Este é um software livre, o código da aplicação se encontra disponível em https://github.com/bcesarg6/BrunoCAD :)</string>
 
     <string name="ajuda">Ajuda</string>
     <string name="ajuda_subtitle">bem-vindo ao BrunoCAD</string>
@@ -68,4 +68,6 @@
     <string name="ajuda_edicao_translacao">Translação de objetos: Primeiro você seleciona o offset de deslocamento (em pixels) depois utiliza os botões ← ↑ → ↓ para transladar os objetos selecionados no canvas.</string>
     <string name="ajuda_edicao_rotacao">Rotação de objetos: Primeiro você seleciona o valor de rotação (em graus) depois utiliza os botões "esquerda" e "direita" para rotacionar (no sentido horário ou anti-horário) os objetos selecionados no canvas</string>
     <string name="ajuda_edicao_m_escala">Mudança de escala: Basta pressionar os botões com os valores de multiplação de escala para mudar a escala dos objetos selecionados no canvas.</string>
+    <string name="ajuda_edicao_exportar">Exportar canvas: exporta o canvas no formato de uma imagem JPG, salvando ela no celula. É necessária a permissão para salvar imagens no dispositivo.</string>
+
 </resources>

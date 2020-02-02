@@ -2,12 +2,18 @@ package com.example.brunocad;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.content.Context;
+import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.Region;
 import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -17,6 +23,7 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -33,7 +40,14 @@ import com.example.brunocad.utils.CADConstants.TabsID;
 import com.example.brunocad.utils.CADUtils;
 import com.example.brunocad.utils.Toaster;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -76,6 +90,20 @@ public class MainActivity extends AppCompatActivity implements AdapterMenu.MenuF
     @BindView(R.id.tv_ids_selecionados_rotacao) TextView tvIdsSelecionadosRotacao;
     @BindView(R.id.spinner_valor_rotacao) MaterialSpinner spinnerValorRotacao;
 
+    private static final String[] PERMISSIONS = {android.Manifest.permission.READ_EXTERNAL_STORAGE,
+            android.Manifest.permission.WRITE_EXTERNAL_STORAGE};
+
+    private static boolean hasPermissions(Context context, String... permissions) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && context != null && permissions != null) {
+            for (String permission : permissions) {
+                if (ActivityCompat.checkSelfPermission(context, permission) != PackageManager.PERMISSION_GRANTED) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
     private int abaSelecionada = TabsID.CREATE;
 
     private AdapterMenu adapterMenuCriar;
@@ -97,6 +125,8 @@ public class MainActivity extends AppCompatActivity implements AdapterMenu.MenuF
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        ActivityCompat.requestPermissions(MainActivity.this, PERMISSIONS, 112);
 
         ButterKnife.bind(this);
 
@@ -148,6 +178,7 @@ public class MainActivity extends AppCompatActivity implements AdapterMenu.MenuF
         if (botaoClicado.getId() == toolsID.CLEAR) onClearClicked();
         else if (botaoClicado.getId() == toolsID.HELP) abrirDialogAjuda();
         else if (botaoClicado.getId() == toolsID.UNDO) undo();
+        else if (botaoClicado.getId() == toolsID.EXPORT_CANVAS) exportCanvas();
         else {
 
             if (funcaoSelecionada == botaoClicado.getId()) cancelOperation();
@@ -877,6 +908,62 @@ public class MainActivity extends AppCompatActivity implements AdapterMenu.MenuF
     @OnClick(R.id.btn_rot_r)
     void RotateRight() {
         RotateDrawings(offsetRotacao);
+    }
+
+    /**
+     * exporta o canvas como um JPG salvo no celular
+     */
+    public void exportCanvas() {
+        if (drawingMap.isEmpty()) {
+            Toaster.shortToast("canvas vazio, nada para exportar :(", this);
+            return;
+        }
+
+        if (!hasPermissions(MainActivity.this, PERMISSIONS)) {
+            Toaster.longToast("Sem permissão para salvar imagens", this);
+        } else {
+
+            try {
+
+                File folder = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM);
+
+                File directory = new File(folder + "/TB System");
+                if (!directory.exists()) directory.mkdir();
+
+                canvas.setDrawingCacheEnabled(true);
+                canvas.buildDrawingCache();
+
+                Bitmap b = canvas.getDrawingCache().copy(Bitmap.Config.ARGB_8888, false);
+
+                Date currentTime = Calendar.getInstance().getTime();
+
+                File imgFile = new File(directory, currentTime.toString() + ".jpg");
+
+                try {
+                    imgFile.createNewFile();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                OutputStream outputStream = new FileOutputStream(imgFile);
+
+                b.compress(Bitmap.CompressFormat.JPEG, 95, outputStream);
+                outputStream.flush();
+                outputStream.close();
+
+                Toaster.longToast("canvas exportado com sucesso, procure nas imagens salvas em seu celular :)", this);
+                canvas.destroyDrawingCache();
+
+                resetTools();
+
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+                Toaster.shortToast("deu ruim ao exportar :(", this);
+            } catch (IOException e) {
+                e.printStackTrace();
+                Toaster.shortToast("deu ruim ao salvar :(", this);
+            }
+        }
     }
 
     @OnClick(R.id.btn_aba_criar)

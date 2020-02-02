@@ -19,7 +19,7 @@ public class CADConstants {
         public static final int TRANSLATION = 2;
         public static final int ROTATION = 3;
         public static final int CHANGE_ESCALE = 4;
-        public static final int ZOOM_EXTEND = 5;
+        public static final int EXPORT_CANVAS = 5;
 
         //Criar
         public static final int LINE = 6;
