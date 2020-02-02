@@ -615,6 +615,9 @@ public class MainActivity extends AppCompatActivity implements AdapterMenu.MenuF
 
         if (drawingMap.isEmpty()) clear(true);
         else draw();
+
+        resetTools();
+        Toaster.shortToast("undo realizado", this);
     }
 
 

@@ -35,4 +35,37 @@
     <string name="rotacionar_em">rotacionar em:</string>
     <string name="pixels">pixels</string>
     <string name="mover_em">mover em:</string>
+
+    <string name="sobre">O BrunoCAD é um sistema de Computer Assisted Drawing (CAD) desenvolvido para a disciplina de Computação Gráfica do curso de Ciência da Computação da Universidade Estadual de Maringá. Este é um software livre, o código da aplicação se encontra disponível em https://github.com/bcesarg6/BrunoCAD :)</string>
+
+    <string name="ajuda">Ajuda</string>
+    <string name="ajuda_subtitle">bem-vindo ao BrunoCAD</string>
+
+    <string name="canvas">Canvas</string>
+    <string name="ajuda_canvas">O canvas é o principal componente do sistema, ocupa a maior parte da tela e nele são desenhadas as formas geométricas. As operações de criação e seleção de objetos no canvas ocorrem a partir de taps na tela. Acima do canvas se encontra o espaço de ajuda de contexto: neste espaço apareceram textos que indicam o estado atual do sistema assim como instruções para o uso das ferramentas e no canto direito as coordenadas dos taps no canvas.</string>
+
+    <string name="ferramentas">Ferramentas</string>
+    <string name="ajuda_ferramentas">Todas as ferramentas se encontram organizadas na caixa de ferramentas localizada na parte inferior do aplicativo e estão divididas em duas categorias: criação e edição, agrupando respectivamente ferramentas de criação e edição de formas geométricas no canvas. Cada ferramenta do sistema será explicada nos tópicos abaixo.</string>
+
+    <string name="criacao">Criação</string>
+
+    <string name="ajuda_criar_linha">Criação de linhas: uma vez selecionada a ferramenta basta dois taps no canvas para criar uma linha que vai do primeiro tap ao segundo tap.</string>
+
+    <string name="ajuda_criar_triangulo">Criação de triângulos: desenha triângulos a partir de 3 taps no canvas, caso os taps sejam muito próximos é possível que o triângulo criado possua arestas quadradas devida a espessura da linha.</string>
+    <string name="ajuda_criar_triangulo_p">Criação de triângulos preenchidos: funciona como a ferramenta de criação de triângulos porém desenha as formas preenchidas.</string>
+
+    <string name="ajuda_criar_retangulo">Criação de retângulos: para desenhar retângulos no canvas bastam dois taps, um que representa a aresta esquerda superior e outro que representa a aresta direita inferior. Não importando a ordem dos taps.</string>
+    <string name="ajuda_criar_retangulo_p">Criação de retângulos preenchidos: funciona como a ferramenta de criação de retângulos porém desenha as formas preenchidas.</string>
+
+    <string name="ajuda_criar_circulo">Criação de círculos: para usar esta ferramenta é necessário realizar tap em dois pontos no canvas, o primeiro será o centro da circunferência e o segundo a borda.</string>
+    <string name="ajuda_criar_cirulo_p">Criação de círculos preenchidos: funciona como a ferramenta de criação de círculos porém desenha as formas preenchidas.</string>
+
+    <string name="edicao">Edição</string>
+    <string name="ajuda_ferramentas_edicao">O uso das ferramentas de edição dependem da seleção de objetos no canvas. Uma vez que uma ferramenta de edição foi selecionada basta realizar um tap dentro da área do objeto no canvas para selecioná-lo, o ID do objeto aparecerá na lista de objetos selecionados no canto inferior esquerdo e ele será afetado pelo uso da ferramenta. Na versão atual a seleção de linhas não é possível pois elas não possuem área.</string>
+
+    <string name="ajuda_edicao_undo">Undo: Desfaz a última ação realizada no sistema, funciona basicamente como o CTRL+Z dos programadas de desktop.</string>
+    <string name="ajuda_edicao_limpar">Limpar: Apaga todos os objetos desenhados, limpando completamente o canvas.</string>
+    <string name="ajuda_edicao_translacao">Translação de objetos: Primeiro você seleciona o offset de deslocamento (em pixels) depois utiliza os botões ← ↑ → ↓ para transladar os objetos selecionados no canvas.</string>
+    <string name="ajuda_edicao_rotacao">Rotação de objetos: Primeiro você seleciona o valor de rotação (em graus) depois utiliza os botões "esquerda" e "direita" para rotacionar (no sentido horário ou anti-horário) os objetos selecionados no canvas</string>
+    <string name="ajuda_edicao_m_escala">Mudança de escala: Basta pressionar os botões com os valores de multiplação de escala para mudar a escala dos objetos selecionados no canvas.</string>
 </resources>
