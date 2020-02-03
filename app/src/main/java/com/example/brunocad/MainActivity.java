@@ -10,7 +10,6 @@ import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.Region;
 import android.graphics.drawable.ColorDrawable;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
@@ -131,6 +130,17 @@ public class MainActivity extends AppCompatActivity implements AdapterMenu.MenuF
         ButterKnife.bind(this);
 
         config();
+
+        boolean isFirstRun = getSharedPreferences("PREFERENCE", MODE_PRIVATE).getBoolean("isFirstRun", true);
+
+        if (isFirstRun) {
+            abrirDialogAjuda();
+
+            getSharedPreferences("PREFERENCE", MODE_PRIVATE)
+                    .edit()
+                    .putBoolean("isFirstRun", false)
+                    .apply();
+        }
     }
 
     private void config() {
@@ -971,17 +981,19 @@ public class MainActivity extends AppCompatActivity implements AdapterMenu.MenuF
         if (abaSelecionada != TabsID.CREATE) {
             abaSelecionada = TabsID.CREATE;
 
-            btnAbaCriar.setBackground(getDrawable(R.color.branco));
-            btnAbaCriar.setTextColor(getColor(R.color.colorAccent));
-            btnAbaCriar.setCompoundDrawableTintList(ColorStateList.valueOf(getColor(R.color.colorAccent)));
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                btnAbaCriar.setBackground(getDrawable(R.color.branco));
+                btnAbaCriar.setTextColor(getColor(R.color.colorAccent));
+                btnAbaCriar.setCompoundDrawableTintList(ColorStateList.valueOf(getColor(R.color.colorAccent)));
 
-            btnAbaFerramentas.setBackground(getDrawable(R.color.brancoEscuro));
-            btnAbaFerramentas.setTextColor(getColor(R.color.cinzaClaro));
-            btnAbaFerramentas.setCompoundDrawableTintList(ColorStateList.valueOf(getColor(R.color.cinzaClaro)));
+                btnAbaFerramentas.setBackground(getDrawable(R.color.brancoEscuro));
+                btnAbaFerramentas.setTextColor(getColor(R.color.cinzaClaro));
+                btnAbaFerramentas.setCompoundDrawableTintList(ColorStateList.valueOf(getColor(R.color.cinzaClaro)));
 
-            btnAbaEditar.setBackground(getDrawable(R.color.brancoEscuro));
-            btnAbaEditar.setTextColor(getColor(R.color.cinzaClaro));
-            btnAbaEditar.setCompoundDrawableTintList(ColorStateList.valueOf(getColor(R.color.cinzaClaro)));
+                btnAbaEditar.setBackground(getDrawable(R.color.brancoEscuro));
+                btnAbaEditar.setTextColor(getColor(R.color.cinzaClaro));
+                btnAbaEditar.setCompoundDrawableTintList(ColorStateList.valueOf(getColor(R.color.cinzaClaro)));
+            }
 
             rvFerramentas.setVisibility(View.INVISIBLE);
             llEditar.setVisibility(View.INVISIBLE);
@@ -994,18 +1006,19 @@ public class MainActivity extends AppCompatActivity implements AdapterMenu.MenuF
         if (abaSelecionada != TabsID.TOOLS) {
             abaSelecionada = TabsID.TOOLS;
 
-            btnAbaFerramentas.setBackground(getDrawable(R.color.branco));
-            btnAbaFerramentas.setTextColor(getColor(R.color.colorAccent));
-            btnAbaFerramentas.setCompoundDrawableTintList(ColorStateList.valueOf(getColor(R.color.colorAccent)));
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                btnAbaFerramentas.setBackground(getDrawable(R.color.branco));
+                btnAbaFerramentas.setTextColor(getColor(R.color.colorAccent));
+                btnAbaFerramentas.setCompoundDrawableTintList(ColorStateList.valueOf(getColor(R.color.colorAccent)));
 
-            btnAbaCriar.setBackground(getDrawable(R.color.brancoEscuro));
-            btnAbaCriar.setTextColor(getColor(R.color.cinzaClaro));
-            btnAbaCriar.setCompoundDrawableTintList(ColorStateList.valueOf(getColor(R.color.cinzaClaro)));
+                btnAbaCriar.setBackground(getDrawable(R.color.brancoEscuro));
+                btnAbaCriar.setTextColor(getColor(R.color.cinzaClaro));
+                btnAbaCriar.setCompoundDrawableTintList(ColorStateList.valueOf(getColor(R.color.cinzaClaro)));
 
-            btnAbaEditar.setBackground(getDrawable(R.color.brancoEscuro));
-            btnAbaEditar.setTextColor(getColor(R.color.cinzaClaro));
-            btnAbaEditar.setCompoundDrawableTintList(ColorStateList.valueOf(getColor(R.color.cinzaClaro)));
-
+                btnAbaEditar.setBackground(getDrawable(R.color.brancoEscuro));
+                btnAbaEditar.setTextColor(getColor(R.color.cinzaClaro));
+                btnAbaEditar.setCompoundDrawableTintList(ColorStateList.valueOf(getColor(R.color.cinzaClaro)));
+            }
 
             rvCriar.setVisibility(View.INVISIBLE);
             llEditar.setVisibility(View.INVISIBLE);
@@ -1018,17 +1031,20 @@ public class MainActivity extends AppCompatActivity implements AdapterMenu.MenuF
         if (abaSelecionada != TabsID.EDIT) {
             abaSelecionada = TabsID.EDIT;
 
-            btnAbaEditar.setBackground(getDrawable(R.color.branco));
-            btnAbaEditar.setTextColor(getColor(R.color.colorAccent));
-            btnAbaEditar.setCompoundDrawableTintList(ColorStateList.valueOf(getColor(R.color.colorAccent)));
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                btnAbaEditar.setBackground(getDrawable(R.color.branco));
+                btnAbaEditar.setTextColor(getColor(R.color.colorAccent));
+                btnAbaEditar.setCompoundDrawableTintList(ColorStateList.valueOf(getColor(R.color.colorAccent)));
 
-            btnAbaCriar.setBackground(getDrawable(R.color.brancoEscuro));
-            btnAbaCriar.setTextColor(getColor(R.color.cinzaClaro));
-            btnAbaCriar.setCompoundDrawableTintList(ColorStateList.valueOf(getColor(R.color.cinzaClaro)));
 
-            btnAbaFerramentas.setBackground(getDrawable(R.color.brancoEscuro));
-            btnAbaFerramentas.setTextColor(getColor(R.color.cinzaClaro));
-            btnAbaFerramentas.setCompoundDrawableTintList(ColorStateList.valueOf(getColor(R.color.cinzaClaro)));
+                btnAbaCriar.setBackground(getDrawable(R.color.brancoEscuro));
+                btnAbaCriar.setTextColor(getColor(R.color.cinzaClaro));
+                btnAbaCriar.setCompoundDrawableTintList(ColorStateList.valueOf(getColor(R.color.cinzaClaro)));
+
+                btnAbaFerramentas.setBackground(getDrawable(R.color.brancoEscuro));
+                btnAbaFerramentas.setTextColor(getColor(R.color.cinzaClaro));
+                btnAbaFerramentas.setCompoundDrawableTintList(ColorStateList.valueOf(getColor(R.color.cinzaClaro)));
+            }
 
             rvCriar.setVisibility(View.INVISIBLE);
             rvFerramentas.setVisibility(View.INVISIBLE);
